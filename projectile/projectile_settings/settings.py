@@ -1,0 +1,85 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# importing external congigs for additional settings values
+from .addons.asgi_config import *
+from .addons.installed_apps import *
+from .addons.middlware import *
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+import dj_database_url
+
+
+SECRET_KEY = "django-insecure-vq$2fk&_667c9w#g)=$ew5ge$l2@8l^^x7ne)uu5*j)@+rsr6("
+
+# DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
+
+DEBUG = True
+ALLOWED_HOSTS = ["*"]
+
+ROOT_URLCONF = "projectile_settings.urls"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            BASE_DIR / "templates",
+        ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = "settings.settings.wsgi.application"
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "chat_app_db",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
+
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
+
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "UTC"
+
+USE_I18N = True
+
+USE_TZ = True
+
+STATIC_URL = "static/"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# AUTH_USER_MODEL = "projectile.core.User"
+
+PHONENUMBER_DEFAULT_REGION = "BD"
