@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 # importing external congigs for additional settings values
 from .addons.asgi_config import *
@@ -9,14 +10,13 @@ from .addons.middlware import *
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, ".env"))
-import dj_database_url
 
 
 SECRET_KEY = "django-insecure-vq$2fk&_667c9w#g)=$ew5ge$l2@8l^^x7ne)uu5*j)@+rsr6("
 
-# DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
+DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
 
-DEBUG = True
+# DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 ROOT_URLCONF = "projectile_settings.urls"
@@ -80,6 +80,6 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# AUTH_USER_MODEL = "projectile.core.User"
+AUTH_USER_MODEL = "core.User"
 
 PHONENUMBER_DEFAULT_REGION = "BD"

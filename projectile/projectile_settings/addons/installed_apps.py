@@ -10,11 +10,10 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 PROJECT_APPS = [
-    # "projectile.base",
-    # "projectile.core",
-    # "projectile.chat",
-    # "projectile.logs",
-    # "projectile.partition",
+    "projectile.base",
+    "projectile.core",
+    "projectile.chat",
+    "projectile.server"
 ]
 
 THIRD_PARTY_APPS = [
