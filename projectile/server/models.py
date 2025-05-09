@@ -24,6 +24,10 @@ class Server(BaseModelWithSlug):
     icon_url = models.CharField(blank=True)
     banner_url = models.CharField(blank=True)
 
+    def save(self, *args, **kwargs):
+        if not self.owner:
+            raise ValueError("Owner must always be set!!")
+        return super().save(*args, **kwargs)
 
 class Category(BaseModelWithSlug):
     # foreignkey fields

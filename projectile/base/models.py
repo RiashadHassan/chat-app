@@ -13,9 +13,9 @@ class BaseModelWithUID(models.Model):
     class Meta:
         abstract = True
 
-    def save(self, force_insert=..., force_update=..., using=..., update_fields=...):
+    def save(self, *args, **kwargs):
         self.updated_at = timezone.now()
-        return super().save(force_insert, force_update, using, update_fields)
+        return super().save()
 
 
 class BaseModelWithSlug(BaseModelWithUID):

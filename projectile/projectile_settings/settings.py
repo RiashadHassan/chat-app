@@ -1,12 +1,15 @@
 import os
+import dj_database_url
+
 from pathlib import Path
 from dotenv import load_dotenv
-import dj_database_url
+
 
 # importing external congigs for additional settings values
 from .addons.asgi_config import *
 from .addons.installed_apps import *
 from .addons.middlware import *
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, ".env"))
@@ -67,6 +70,14 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",  # required for /auth/login
+    )
+}
+
 
 LANGUAGE_CODE = "en-us"
 
