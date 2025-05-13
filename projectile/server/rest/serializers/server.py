@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from projectile.base.dynamic_serializer import DynamicUserSerializer
+from projectile.base.dynamic_serializer import UserDynamicSerializer
 from projectile.server.models import Server
 
 
 class ServerListCreateSerializer(serializers.ModelSerializer):
-    owner = DynamicUserSerializer(fields=("username", "status"), read_only=True)
+    owner = UserDynamicSerializer(fields=("username", "status"), read_only=True)
 
     class Meta:
         model = Server

@@ -10,12 +10,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            "uid",
             "first_name",
             "last_name",
             "username",
             "email",
             "phone",
             "password",
+            "created_at",
+            "updated_at",
         ]
         extra_kwargs = {
             "password": {"write_only": True, "min_length": 8},
@@ -31,3 +34,20 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # custom model manager
         user = User.objects.create_user(email, password, **validated_data)
         return user
+
+
+class UserRetrieveUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "uid",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "phone",
+            "created_at",
+            "updated_at",
+        ]
+
+        read_only_fields = ["uid", "created_at", "updated_at"]

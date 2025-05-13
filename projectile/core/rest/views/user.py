@@ -1,20 +1,45 @@
 from django.db import transaction
 from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate, aauthenticate
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    RetrieveUpdateAPIView,
+    get_object_or_404,
+)
 
-from ..serializers.user import UserRegisterSerializer
-from rest_framework.response import Response
-
-from rest_framework import status
+from ..serializers.user import UserRegisterSerializer, UserRetrieveUpdateSerializer
 
 User = get_user_model()
 
+
 class UserRegisterView(CreateAPIView):
-    # def post(self, *args, **kwargs):
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
 
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+
+class UserRetrieveUpdateView(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRetrieveUpdateSerializer
+    lookup_field = "uid"
+    lookup_url_kwarg = "uid"
+
+
+class UserDestroyView(DestroyAPIView):
+    queryset = User.objects.all()
+    lookup_field = "uid"
+    lookup_url_kwarg = "uid"
+
+
+class PrivateUserManageView(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRetrieveUpdateSerializer
+
+    def get_object(self):
+        return get_object_or_404(User, uid=self.request.user.uid)
+
+
+class PrivateUserDestroyView(DestroyAPIView):
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return get_object_or_404(User, uid=self.request.user.uid)

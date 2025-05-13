@@ -28,12 +28,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
-    is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
 
     objects = CustomUserManager()
+
+    def save(self, *args, **kwargs):
+        self.updated_at = timezone.now() 
+        return super().save()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} : {self.email}"

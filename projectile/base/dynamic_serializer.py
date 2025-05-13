@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 User = get_user_model()
 
+
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     """
     A ModelSerializer that takes an additional `fields` argument that
@@ -12,7 +13,7 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         # Don't pass the 'fields' arg up to the superclass
-        fields = kwargs.pop('fields', None)
+        fields = kwargs.pop("fields", None)
 
         # Instantiate the superclass normally
         super().__init__(*args, **kwargs)
@@ -24,7 +25,8 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
-class DynamicUserSerializer(DynamicFieldsModelSerializer):
+
+class UserDynamicSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
