@@ -18,7 +18,8 @@ class Server(BaseModelWithSlug):
     user_limit = models.BigIntegerField(
         default=1000000, help_text="how many users can join this server?"
     )
-    channel_data = models.JSONField(default=dict)
+    server_data = models.JSONField(default=dict, blank=True)
+    channel_data = models.JSONField(default=dict, blank=True)
 
     # url fields
     icon_url = models.CharField(blank=True)
@@ -29,9 +30,12 @@ class Server(BaseModelWithSlug):
             raise ValueError("Owner must always be set!!")
         return super().save(*args, **kwargs)
 
+
 class Category(BaseModelWithSlug):
     # foreignkey fields
-    server = models.ForeignKey("server.Server", on_delete=models.CASCADE)
+    server = models.ForeignKey(
+        "server.Server", on_delete=models.CASCADE, related_name="categories"
+    )
 
     # model fields
     position = models.FloatField()
@@ -68,7 +72,7 @@ class ServerMember(BaseModelWithUID):
     user = models.ForeignKey("core.User", on_delete=models.CASCADE, db_index=True)
     server = models.ForeignKey("server.Server", on_delete=models.CASCADE, db_index=True)
 
-    accessible_channels = models.JSONField(default=dict)
+    accessible_channels = models.JSONField(default=dict, blank=True)
 
 
 # class ChannelMember(BaseModelWithUID):

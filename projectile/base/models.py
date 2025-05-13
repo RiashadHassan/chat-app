@@ -8,7 +8,7 @@ class BaseModelWithUID(models.Model):
     uid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
-    metadata = models.JSONField(default=dict)
+    metadata = models.JSONField(default=dict, blank=True)
 
     class Meta:
         abstract = True
