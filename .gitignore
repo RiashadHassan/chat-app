@@ -1,3 +1,4 @@
 scripts
 env
 **/__pycache__/
+**/staticfiles/

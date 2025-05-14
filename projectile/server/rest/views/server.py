@@ -8,6 +8,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from projectile.base.permissions import IsSuperUser
@@ -21,20 +22,20 @@ from projectile.server.rest.serializers.server import (
 
 
 class ServerListCreateView(ListCreateAPIView):
-    queryset = Server.objects.filter(is_deleted=False)
     serializer_class = ServerListCreateSerializer
-
     permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination 
 
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]  # so that anyone can access the server list
         return super().get_permissions()
 
-    # def get_queryset(self):
-    # if self.request.query_params.get("all_servers", None):
-    #     return Server.objects.all()
-    # return self.queryset
+    def get_queryset(self):
+        return (
+            Server.objects.filter(is_deleted=False)
+            .select_related("owner")
+        )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -43,18 +44,27 @@ class ServerListCreateView(ListCreateAPIView):
 
 
 class ServerRetrieveView(RetrieveAPIView):
-    queryset = Server.objects.filter(is_deleted=False).prefetch_related("categories")
+    queryset = (
+        Server.objects.filter(is_deleted=False)
+        .prefetch_related("categories")
+        .select_related("owner")
+    )
     serializer_class = ServerRetrieveSerializer
     lookup_field = "uid"
     lookup_url_kwarg = "uid"
 
 
 class ServerUpdateView(UpdateAPIView):
-    queryset = Server.objects.filter(is_deleted=False)
+    queryset = (
+        Server.objects.filter(is_deleted=False)
+        .prefetch_related("categories")
+        .select_related("owner")
+    )
     serializer_class = ServerRetrieveSerializer
     lookup_field = "uid"
     lookup_url_kwarg = "uid"
     permission_classes = [IsOwner]
+
 
 class ServerDestroyView(DestroyAPIView):
     queryset = Server.objects.filter(is_deleted=False)

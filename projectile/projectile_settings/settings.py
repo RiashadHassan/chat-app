@@ -17,9 +17,9 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 SECRET_KEY = "django-insecure-vq$2fk&_667c9w#g)=$ew5ge$l2@8l^^x7ne)uu5*j)@+rsr6("
 
-DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
+# DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
 
-# DEBUG = True
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 ROOT_URLCONF = "projectile_settings.urls"
@@ -75,7 +75,17 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",  # required for /auth/login
-    )
+    ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 100,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "...",
+    "DESCRIPTION": "---",
+    "VERSION": "0.0.1",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 
@@ -94,3 +104,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "core.User"
 
 PHONENUMBER_DEFAULT_REGION = "BD"
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

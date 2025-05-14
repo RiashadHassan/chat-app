@@ -3,6 +3,7 @@ from django.db.models import QuerySet
 from django.contrib.auth import get_user_model
 from django.utils.functional import cached_property
 
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 from rest_framework.generics import (
@@ -56,6 +57,8 @@ class UserListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerializer
     permission_classes = [IsSuperUser]
+    pagination_class = PageNumberPagination 
+
 
     def get_queryset(self) -> QuerySet[User]:
         query_params = self.request.query_params
