@@ -12,14 +12,13 @@ from .addons.middlware import *
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(os.path.join(BASE_DIR.parent, ".env"))
 
 
-SECRET_KEY = "django-insecure-vq$2fk&_667c9w#g)=$ew5ge$l2@8l^^x7ne)uu5*j)@+rsr6("
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
+DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
 
-DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 ROOT_URLCONF = "projectile_settings.urls"
