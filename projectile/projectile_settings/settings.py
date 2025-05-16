@@ -43,15 +43,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "settings.settings.wsgi.application"
 
+# DATABASE_ROUTERS = ["projectile.base.db_router.DatabaseRouter"]
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "chat_app_db",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
+    "default": dj_database_url.config(env="DATABASE_URL", conn_max_age=600),
+    # "replica": dj_database_url.config(env="REPLICA_DATABASE_URL", conn_max_age=600),
 }
 
 
@@ -104,4 +100,4 @@ AUTH_USER_MODEL = "core.User"
 
 PHONENUMBER_DEFAULT_REGION = "BD"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
