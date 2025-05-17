@@ -3,7 +3,11 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            # for when we use venv instead of docker :)
+            # "hosts": [("127.0.0.1", 6379)],
+
+            # because redis is accessible by its service name inside docker
+            "hosts": [("redis", 6379)],
         },
     },
 }
