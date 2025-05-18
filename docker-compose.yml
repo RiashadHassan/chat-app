@@ -11,7 +11,6 @@ services:
     # ensure we’re in the right folder for manage.py
     working_dir: /app/projectile
     command: python manage.py runserver 0.0.0.0:8000
-    # command: daphne -b 0.0.0.0 -p 8000 projectile_settings.asgi:application
     ports:
       - "8000:8000"
     env_file:
@@ -19,6 +18,7 @@ services:
     depends_on:
       - db
       - redis
+      - elasticsearch
 
   db:
     container_name: projectile_db
@@ -34,5 +34,24 @@ services:
     ports:
       - "6379:6379"
 
+  elasticsearch:
+    container_name: projectile_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    environment:
+      - discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE}
+      - xpack.security.enabled=${ELASTICSEARCH_SECURITY_ENABLED}
+      - bootstrap.memory_lock=${ELASTICSEARCH_MEMORY_LOCK}
+      - ES_JAVA_OPTS=${ELASTICSEARCH_JAVA_OPTS}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+
 volumes:
   postgres_data:
+  elasticsearch_data:

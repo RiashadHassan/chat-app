@@ -18,6 +18,8 @@ django_app_urls = [
     path("ws/v1/chat/", include("projectile.chat.urls")),
     path("api/v1/core/", include("projectile.core.rest.urls")),
     path("api/v1/servers/", include("projectile.server.rest.urls")),
+    path("api/v1/search/", include("projectile.elastic.rest.urls")),
+
 ]
 
 jwt_urls = [

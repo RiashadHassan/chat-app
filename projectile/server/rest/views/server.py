@@ -24,7 +24,7 @@ from projectile.server.rest.serializers.server import (
 class ServerListCreateView(ListCreateAPIView):
     serializer_class = ServerListCreateSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = PageNumberPagination 
+    pagination_class = PageNumberPagination
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -32,10 +32,7 @@ class ServerListCreateView(ListCreateAPIView):
         return super().get_permissions()
 
     def get_queryset(self):
-        return (
-            Server.objects.filter(is_deleted=False)
-            .select_related("owner")
-        )
+        return Server.objects.filter(is_deleted=False).select_related("owner")
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

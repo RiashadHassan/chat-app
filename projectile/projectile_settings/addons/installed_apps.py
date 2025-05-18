@@ -22,6 +22,7 @@ THIRD_PARTY_APPS = [
     "phonenumber_field",
     "drf_spectacular",
     "silk",
+    "django_elasticsearch_dsl",
 ]
 
 INSTALLED_APPS = ON_TOP_APPS + DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS

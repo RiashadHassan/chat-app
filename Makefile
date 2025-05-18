@@ -43,9 +43,16 @@ run:
 test:
 	$(COMPOSE) exec $(APP_NAME) python manage.py test
 
+runscript:
+	$(COMPOSE) exec $(APP_NAME) python manage.py runscript script
+
 # utils
 collectstatic:
 	$(COMPOSE) exec $(APP_NAME) python manage.py collectstatic --noinput
 
 check:
 	$(COMPOSE) exec $(APP_NAME) python manage.py check
+
+# elastic search
+rebuild:
+	$(COMPOSE) exec $(APP_NAME) python manage.py search_index --rebuild
