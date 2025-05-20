@@ -13,7 +13,8 @@ PROJECT_APPS = [
     "projectile.base",
     "projectile.core",
     "projectile.chat",
-    "projectile.server"
+    "projectile.server",
+    "projectile.member",
 ]
 
 THIRD_PARTY_APPS = [
