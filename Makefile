@@ -65,5 +65,9 @@ rebuild:
 
 
 # postgres
+psql:
+	$(COMPOSE) exec db psql -U $$POSTGRES_USER -d postgres
+
 drop_db:
-	$(COMPOSE) exec db psql -U $$POSTGRES_USER -d postgres -c "DROP DATABASE 'django_db';"
+	$(COMPOSE) exec db psql -U $$POSTGRES_USER -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'django_db';"
+	$(COMPOSE) exec db psql -U $$POSTGRES_USER -d postgres -c "DROP DATABASE "django_db";"
