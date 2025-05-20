@@ -54,5 +54,16 @@ check:
 	$(COMPOSE) exec $(APP_NAME) python manage.py check
 
 # elastic search
+create:
+	$(COMPOSE) exec $(APP_NAME) python manage.py search_index --create
+
+populate:
+	$(COMPOSE) exec $(APP_NAME) python manage.py search_index --populate
+
 rebuild:
 	$(COMPOSE) exec $(APP_NAME) python manage.py search_index --rebuild
+
+
+# postgres
+drop_db:
+	$(COMPOSE) exec db psql -U $$POSTGRES_USER -d postgres -c "DROP DATABASE 'django_db';"
