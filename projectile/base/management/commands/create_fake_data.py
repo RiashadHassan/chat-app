@@ -2,7 +2,7 @@ from tqdm import tqdm
 from faker import Faker
 
 from django.db import transaction
-from django.core.management import BaseCommand
+from django.core.management import BaseCommand, call_command
 from django.contrib.auth.hashers import make_password
 
 from projectile.core.models import User
@@ -30,6 +30,8 @@ class Command(BaseCommand):
         channels = self.create_channels(categories)
         self.create_threads(channels)
 
+        call_command("load_permissions")
+
     def create_superuser(self):
         try:
             User.objects.get(email="riashad@gmail.com")
@@ -43,7 +45,9 @@ class Command(BaseCommand):
                 phone="01827703876",
                 is_verified=True,
             )
-        self.stdout.write("One SuperUser Created!!")
+        self.stdout.write(
+            self.style.SUCCESS(self.style.SUCCESS("One SuperUser Created!!"))
+        )
 
     def create_users(self, count):
         with transaction.atomic():
@@ -61,11 +65,11 @@ class Command(BaseCommand):
                     for email in tqdm(emails, desc="Creating Users...")
                 ]
                 User.objects.bulk_create(users_to_create, ignore_conflicts=True)
-                self.stdout.write("Fake Users created!")
+                self.stdout.write(self.style.SUCCESS("Fake Users created!"))
                 users = User.objects.filter(email__in=emails)
                 return users
             except Exception as e:
-                self.stdout.write(str(e))
+                self.stdout.write(self.style.ERROR(str(e)))
 
     def create_servers(self, users):
         with transaction.atomic():
@@ -81,7 +85,7 @@ class Command(BaseCommand):
                 except:
                     self.stdout.write(f"Error creating Server for {user.email}!")
                     continue
-            self.stdout.write("Fake Servers created!")
+            self.stdout.write(self.style.SUCCESS("Fake Servers created!"))
             return servers
 
     def create_categories(self, servers):
@@ -100,7 +104,7 @@ class Command(BaseCommand):
                 except:
                     self.stdout.write(f"Error creating Category for {server.uid}!")
                     continue
-            self.stdout.write("Fake Categories created!")
+            self.stdout.write(self.style.SUCCESS("Fake Categories created!"))
             return categories
 
     def create_channels(self, categories):
@@ -120,7 +124,7 @@ class Command(BaseCommand):
                 except:
                     self.stdout.write(f"Error creating Channel for {category.uid}!")
                     continue
-            self.stdout.write("Fake Channels created!")
+            self.stdout.write(self.style.SUCCESS("Fake Channels created!"))
             return channels
 
     def create_threads(self, channels):
@@ -139,5 +143,5 @@ class Command(BaseCommand):
                 except:
                     self.stdout.write(f"Error creating Thread for {channel.uid}!")
                     continue
-            self.stdout.write("Fake Threads created!")
+            self.stdout.write(self.style.SUCCESS("Fake Threads created!"))
             return threads
