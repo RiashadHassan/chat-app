@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from projectile.server.models import Server, Category, Channel, Thread, AuditLog
+from projectile.server.models import Server, Category, Channel, Thread #AuditLog
 
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
     list_display = ("uid", "slug", "owner", "icon_url", "banner_url")
-    list_filter = ("user_limit", "is_deleted")
+    list_filter = ("member_limit", "is_deleted")
 
     search_fields = ("uid", "slug", "owner", "description", "icon_url", "banner_url")
     list_per_page = 50
@@ -37,10 +37,10 @@ class ThreadAdmin(admin.ModelAdmin):
     list_per_page = 50
 
 
-@admin.register(AuditLog)
-class AuditLogAdmin(admin.ModelAdmin):
-    list_display = ("uid", "user", "server", "details")
-    list_filter = ("action",)
+# @admin.register(AuditLog)
+# class AuditLogAdmin(admin.ModelAdmin):
+#     list_display = ("uid", "member", "server", "details")
+#     list_filter = ("action",)
 
-    search_fields = ("uid", "user", "server", "details")
-    list_per_page = 50
+#     search_fields = ("uid", "member", "server", "details")
+#     list_per_page = 50

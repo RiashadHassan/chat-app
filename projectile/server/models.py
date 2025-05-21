@@ -1,18 +1,16 @@
 from django.db import models
 
-from django.contrib.auth import get_user_model
 from projectile.base.models import BaseModelWithUID, BaseModelWithSlug
 
-User = get_user_model()
-
+from projectile.server.choices import ChannelTypes
 
 """
 IMPORTANT!!
 
 Some Foreignkey relations might feel like they are redundant
 (i.e. we have category in channel, and server in category
-so we can write channel.category.server to get the server right?)
-yes, but when you have 100 million instances and complex subqueries select_related helps but not that much
+so we can write channel.category.server to get the server right?) yes, but
+when you have 100 million rows and complex subqueries select_related helps but not that much
 you can't afford 10 second long queries because you have to make join operations everytime
 
 """
@@ -20,104 +18,214 @@ you can't afford 10 second long queries because you have to make join operations
 
 class Server(BaseModelWithSlug):
     # foreignkey fields
-    owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_index=True)
+    owner = models.ForeignKey("core.User", on_delete=models.PROTECT)
+    owner_uid = models.CharField(max_length=36, db_index=True)
 
     # model fields
     is_deleted = models.BooleanField(
         default=False, help_text="has server been soft deleted by owner?"
     )
     description = models.TextField()
-    user_limit = models.BigIntegerField(
+    member_limit = models.BigIntegerField(
         default=1000000, help_text="how many users can join this server?"
     )
     server_data = models.JSONField(default=dict, blank=True)
     channel_data = models.JSONField(default=dict, blank=True)
 
     # url fields
-    icon_url = models.CharField(blank=True)
-    banner_url = models.CharField(blank=True)
+    icon_url = models.TextField(default="", blank=True)
+    banner_url = models.TextField(default="", blank=True)
 
     def save(self, *args, **kwargs):
         if not self.owner:
             raise ValueError("Owner must always be set!!")
+        self.update_uids()
         return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Server: {self.name} - Owner: {self.owner}"
 
 
 class Category(BaseModelWithSlug):
     # foreignkey fields
     server = models.ForeignKey(
-        "server.Server", on_delete=models.CASCADE, related_name="categories"
+        "server.Server",
+        on_delete=models.CASCADE,
+        related_name="categories",
     )
+    server_uid = models.CharField(max_length=36, db_index=True)
 
     # model fields
-    position = models.FloatField()
+    position = models.FloatField(db_index=True)
+
+    class Meta:
+        ordering = ["position"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["server", "name"], name="unique_server_category"
+            )
+        ]
+
+    def __str__(self):
+        return f"Category: {self.name} - Server: {self.server}"
 
 
 class Channel(BaseModelWithSlug):
     # foreignkey fields
-    server = models.ForeignKey("server.Server", on_delete=models.CASCADE)
-    category = models.ForeignKey("server.Category", on_delete=models.CASCADE)
+    server = models.ForeignKey(
+        "server.Server",
+        on_delete=models.CASCADE,
+        related_name="channels",
+    )
+    server_uid = models.CharField(max_length=36, db_index=True)
+
+    category = models.ForeignKey(
+        "server.Category", on_delete=models.CASCADE, related_name="channels"
+    )
+    category_uid = models.CharField(max_length=36, db_index=True)
 
     # model fields
-    user_limit = models.BigIntegerField(
+    type = models.CharField(
+        max_length=20, choices=ChannelTypes, default=ChannelTypes.TEXT
+    )
+    member_limit = models.BigIntegerField(
         default=1000000, help_text="how many users can join this channel?"
     )
-    position = models.FloatField()
+    position = models.FloatField(db_index=True)
     is_private = models.BooleanField(default=False, help_text="is the channel private?")
     slow_mode = models.IntegerField(
         default=0, help_text="how many seconds should pass between messages?"
     )
+    bit_rate = models.IntegerField(
+        null=True, blank=True, help_text="Used for voice channels"
+    )
+
+    class Meta:
+        ordering = ["position"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["category", "name"], name="unique_category_channel"
+            )
+        ]
+
+    def __str__(self):
+        return f"Channel: {self.name} - Server: {self.server}"
 
 
 class Thread(BaseModelWithSlug):
     # foreignkey fields
     server = models.ForeignKey(
-        "server.Server",
-        on_delete=models.CASCADE,
+        "server.Server", on_delete=models.CASCADE, related_name="threads"
     )
-    category = models.ForeignKey("server.Category", on_delete=models.CASCADE)
+    server_uid = models.CharField(max_length=36, db_index=True)
+
+    category = models.ForeignKey(
+        "server.Category", on_delete=models.CASCADE, related_name="threads"
+    )
     channel = models.ForeignKey(
-        "server.Channel", on_delete=models.CASCADE, db_index=True
+        "server.Channel",
+        on_delete=models.CASCADE,
+        related_name="threads",
     )
+    channel_uid = models.CharField(max_length=36, db_index=True)
 
     # model fields
+    position = models.FloatField(db_index=True)
     is_archived = models.BooleanField(default=False)
     auto_archive_duration = models.IntegerField(
         default=30, help_text="stays active for 30 days by default"
     )
 
+    class Meta:
+        ordering = ["position"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["channel", "name"], name="unique_channel_thread"
+            )
+        ]
 
-class AuditLog(BaseModelWithUID):
+    def __str__(self):
+        return f"Thread: {self.name} - Channel: {self.channel}"
+
+
+class Role(BaseModelWithSlug):
     # foreignkey fields
-    user = models.ForeignKey("core.User", on_delete=models.CASCADE, db_index=True)
-    server = models.ForeignKey("server.Server", on_delete=models.CASCADE, db_index=True)
+    created_by = models.ForeignKey("core.User", on_delete=models.SET_NULL, null=True)
+    server = models.ForeignKey(
+        "server.Server", on_delete=models.CASCADE, related_name="roles"
+    )
+    server_uid = models.CharField(max_length=36, db_index=True)
 
     # model fields
-    action = models.CharField()
-    details = models.TextField(blank=True)
+    color = models.CharField(max_length=7, blank=True, default="#FFFFFF")
+    position = models.FloatField(db_index=True)
+
+    # url fields
+    icon_url = models.TextField(default="", blank=True)
+
+    class Meta:
+        ordering = ["position"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["server", "name"], name="unique_server_role"
+            )
+        ]
+
+    def __str__(self):
+        return f"Role: {self.name} - Server: {self.server}"
 
 
-class ServerMember(BaseModelWithUID):
+class RolePermission(BaseModelWithUID):
     # foreignkey fields
-    user = models.ForeignKey("core.User", on_delete=models.CASCADE, db_index=True)
-    server = models.ForeignKey("server.Server", on_delete=models.CASCADE, db_index=True)
+    role = models.ForeignKey(
+        "server.Role", on_delete=models.CASCADE, related_name="role_permissions"
+    )
+    role_uid = models.CharField(max_length=36, db_index=True)
+    permission = models.ForeignKey("permission.Permission", on_delete=models.CASCADE)
+    permission_uid = models.CharField(max_length=36, db_index=True)
 
-    accessible_channels = models.JSONField(default=dict, blank=True)
+    class Meta:
+        unique_together = ("role", "permission")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["role", "permission"], name="unique_role_permission"
+            )
+        ]
+
+    def __str__(self):
+        return f"Role: {self.role.name} - Permission: {self.permission.name}"
 
 
-# class ChannelMember(BaseModelWithUID):
+# class PermissionOverride(BaseModelWithUID):
+#     channel = models.ForeignKey(
+#         "server.Channel", on_delete=models.CASCADE, null=True, blank=True
+#     )
+#     category = models.ForeignKey(
+#         "server.Category", on_delete=models.CASCADE, null=True, blank=True
+#     )
+#     role = models.ForeignKey(
+#         "server.Role", on_delete=models.CASCADE, null=True, blank=True
+#     )
+#     member = models.ForeignKey(
+#         "member.ServerMember", on_delete=models.CASCADE, null=True, blank=True
+#     )
+#     user = models.ForeignKey(
+#         "core.User", on_delete=models.CASCADE, null=True, blank=True
+#     )
+#     allow_permissions = models.JSONField(null=True, blank=True)
+#     deny_permissions = models.JSONField(null=True, blank=True)
+
+
+# class AuditLog(BaseModelWithUID):
 #     # foreignkey fields
-#     user = models.ForeignKey("core.User", on_delete=models.CASCADE, db_index=True)
-#     server = models.ForeignKey("server.Server", on_delete=models.CASCADE, db_index=True)
+#     member = models.ForeignKey("member.ServerMember", on_delete=models.CASCADE)
+#     member_uid = models.CharField(max_length=36, db_index=True)
 
+#     server = models.ForeignKey(
+#         "server.Server", on_delete=models.CASCADE, related_name="audit_logs"
+#     )
+#     server_uid = models.CharField(max_length=36, db_index=True)
 
-# class ChannelAccess(BaseModelWithUID):
-#     pass
-
-
-# class Role(BaseModelWithSlug):
-#     pass
-
-
-# class ServerRole(BaseModelWithUID):
-#     pass
+#     # model fields
+#     action = models.CharField(db_index=True)
+#     details = models.TextField(blank=True)
