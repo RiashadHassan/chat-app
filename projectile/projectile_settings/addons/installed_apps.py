@@ -15,6 +15,7 @@ PROJECT_APPS = [
     "projectile.chat",
     "projectile.server",
     "projectile.member",
+    "projectile.permission",
 ]
 
 THIRD_PARTY_APPS = [
