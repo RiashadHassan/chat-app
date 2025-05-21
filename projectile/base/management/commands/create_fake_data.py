@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 from django.contrib.auth.hashers import make_password
 
 from projectile.core.models import User
-from projectile.server.models import Server, Category, Channel, AuditLog, Thread
+from projectile.server.models import Server, Category, Channel, Thread
 
 
 class Command(BaseCommand):
