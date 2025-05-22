@@ -3,8 +3,8 @@ from django.contrib import admin
 from .models import *
 
 
-@admin.register(ServerMember)
-class ServerMemberAdmin(admin.ModelAdmin):
+@admin.register(Member)
+class MemberAdmin(admin.ModelAdmin):
     list_display = ("uid", "user", "user_uid", "server", "server_uid")
     search_fields = ("uid", "user", "user_uid", "server", "server_uid")
     list_per_page = 50

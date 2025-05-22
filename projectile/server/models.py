@@ -206,7 +206,7 @@ class RolePermission(BaseModelWithUID):
 #         "server.Role", on_delete=models.CASCADE, null=True, blank=True
 #     )
 #     member = models.ForeignKey(
-#         "member.ServerMember", on_delete=models.CASCADE, null=True, blank=True
+#         "member.Member", on_delete=models.CASCADE, null=True, blank=True
 #     )
 #     user = models.ForeignKey(
 #         "core.User", on_delete=models.CASCADE, null=True, blank=True
@@ -217,7 +217,7 @@ class RolePermission(BaseModelWithUID):
 
 # class AuditLog(BaseModelWithUID):
 #     # foreignkey fields
-#     member = models.ForeignKey("member.ServerMember", on_delete=models.CASCADE)
+#     member = models.ForeignKey("member.Member", on_delete=models.CASCADE)
 #     member_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
 #     server = models.ForeignKey(

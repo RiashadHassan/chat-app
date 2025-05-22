@@ -3,7 +3,7 @@ from django.db import models
 from projectile.base.models import BaseModelWithUID, BaseModelWithSlug
 
 
-class ServerMember(BaseModelWithUID):
+class Member(BaseModelWithUID):
     # foreignkey fields
     user = models.ForeignKey(
         "core.User", on_delete=models.CASCADE, db_index=True, related_name="members"
@@ -31,7 +31,7 @@ class ServerMember(BaseModelWithUID):
 class MemberRoles(BaseModelWithUID):
     # foreignkey fields
     member = models.ForeignKey(
-        "member.ServerMember", on_delete=models.CASCADE, related_name="member_roles"
+        "member.Member", on_delete=models.CASCADE, related_name="member_roles"
     )
     member_uid = models.CharField(max_length=36, db_index=True, blank=True)
     role = models.ForeignKey(
