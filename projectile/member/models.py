@@ -8,11 +8,11 @@ class ServerMember(BaseModelWithUID):
     user = models.ForeignKey(
         "core.User", on_delete=models.CASCADE, db_index=True, related_name="members"
     )
-    user_uid = models.CharField(max_length=36, db_index=True)
+    user_uid = models.CharField(max_length=36, db_index=True, blank=True)
     server = models.ForeignKey(
         "server.Server", on_delete=models.CASCADE, db_index=True, related_name="servers"
     )
-    server_uid = models.CharField(max_length=36, db_index=True)
+    server_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
     accessible_channels = models.JSONField(default=dict, blank=True)
@@ -25,7 +25,7 @@ class ServerMember(BaseModelWithUID):
         ]
 
     def __str__(self):
-        return f"User: {self.user.name} - Server: {self.server.name}"
+        return f"User: {self.user} - Server: {self.server.name}"
 
 
 class MemberRoles(BaseModelWithUID):
@@ -33,11 +33,11 @@ class MemberRoles(BaseModelWithUID):
     member = models.ForeignKey(
         "member.ServerMember", on_delete=models.CASCADE, related_name="member_roles"
     )
-    member_uid = models.CharField(max_length=36, db_index=True)
+    member_uid = models.CharField(max_length=36, db_index=True, blank=True)
     role = models.ForeignKey(
         "server.Role", on_delete=models.CASCADE, related_name="role_members"
     )
-    role_uid = models.CharField(max_length=36, db_index=True)
+    role_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     class Meta:
         constraints = [

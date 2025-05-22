@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return super().save()
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} : {self.email}"
+        return f"{self.username} : {self.email}"
 
 
 # class UserDetails(models.Model):

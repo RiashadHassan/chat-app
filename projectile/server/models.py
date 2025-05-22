@@ -19,7 +19,7 @@ you can't afford 10 second long queries because you have to make join operations
 class Server(BaseModelWithSlug):
     # foreignkey fields
     owner = models.ForeignKey("core.User", on_delete=models.PROTECT)
-    owner_uid = models.CharField(max_length=36, db_index=True)
+    owner_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
     is_deleted = models.BooleanField(
@@ -39,11 +39,10 @@ class Server(BaseModelWithSlug):
     def save(self, *args, **kwargs):
         if not self.owner:
             raise ValueError("Owner must always be set!!")
-        self.update_uids()
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Server: {self.name} - Owner: {self.owner}"
+        return f"Server: {self.uid} -Owner: {self.owner_uid}"
 
 
 class Category(BaseModelWithSlug):
@@ -53,7 +52,7 @@ class Category(BaseModelWithSlug):
         on_delete=models.CASCADE,
         related_name="categories",
     )
-    server_uid = models.CharField(max_length=36, db_index=True)
+    server_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
     position = models.FloatField(db_index=True)
@@ -77,12 +76,12 @@ class Channel(BaseModelWithSlug):
         on_delete=models.CASCADE,
         related_name="channels",
     )
-    server_uid = models.CharField(max_length=36, db_index=True)
+    server_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     category = models.ForeignKey(
         "server.Category", on_delete=models.CASCADE, related_name="channels"
     )
-    category_uid = models.CharField(max_length=36, db_index=True)
+    category_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
     type = models.CharField(
@@ -117,7 +116,7 @@ class Thread(BaseModelWithSlug):
     server = models.ForeignKey(
         "server.Server", on_delete=models.CASCADE, related_name="threads"
     )
-    server_uid = models.CharField(max_length=36, db_index=True)
+    server_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     category = models.ForeignKey(
         "server.Category", on_delete=models.CASCADE, related_name="threads"
@@ -127,7 +126,7 @@ class Thread(BaseModelWithSlug):
         on_delete=models.CASCADE,
         related_name="threads",
     )
-    channel_uid = models.CharField(max_length=36, db_index=True)
+    channel_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
     position = models.FloatField(db_index=True)
@@ -154,7 +153,7 @@ class Role(BaseModelWithSlug):
     server = models.ForeignKey(
         "server.Server", on_delete=models.CASCADE, related_name="roles"
     )
-    server_uid = models.CharField(max_length=36, db_index=True)
+    server_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
     color = models.CharField(max_length=7, blank=True, default="#FFFFFF")
@@ -180,9 +179,9 @@ class RolePermission(BaseModelWithUID):
     role = models.ForeignKey(
         "server.Role", on_delete=models.CASCADE, related_name="role_permissions"
     )
-    role_uid = models.CharField(max_length=36, db_index=True)
+    role_uid = models.CharField(max_length=36, db_index=True, blank=True)
     permission = models.ForeignKey("permission.Permission", on_delete=models.CASCADE)
-    permission_uid = models.CharField(max_length=36, db_index=True)
+    permission_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     class Meta:
         unique_together = ("role", "permission")
@@ -219,12 +218,12 @@ class RolePermission(BaseModelWithUID):
 # class AuditLog(BaseModelWithUID):
 #     # foreignkey fields
 #     member = models.ForeignKey("member.ServerMember", on_delete=models.CASCADE)
-#     member_uid = models.CharField(max_length=36, db_index=True)
+#     member_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
 #     server = models.ForeignKey(
 #         "server.Server", on_delete=models.CASCADE, related_name="audit_logs"
 #     )
-#     server_uid = models.CharField(max_length=36, db_index=True)
+#     server_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
 #     # model fields
 #     action = models.CharField(db_index=True)

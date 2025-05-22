@@ -6,4 +6,5 @@ class ServerConfig(AppConfig):
     name = 'projectile.server'
 
     def ready(self):
+        from projectile.server import signals
         import projectile.elastic.documents.server
