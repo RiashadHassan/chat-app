@@ -12,23 +12,31 @@ from drf_spectacular.views import (
 )
 
 
+project_urls = [
+    path("api/v1/core/", include("projectile.core.rest.urls")),
+    path("api/v1/servers/", include("projectile.server.rest.urls")),
+    path(
+        "api/v1/servers/<uuid:s_uid>/members/",
+        include("projectile.member.rest.urls"),
+    ),
+    path("api/v1/search/", include("projectile.elastic.rest.urls")),
+]
+
+ws_urls = [
+    path("ws/v1/chat/", include("projectile.chat.urls")),
+]
+
+
 django_app_urls = [
     path("admin/", admin.site.urls),
     path("auth/", include("rest_framework.urls")),
-    path("ws/v1/chat/", include("projectile.chat.urls")),
-    path("api/v1/core/", include("projectile.core.rest.urls")),
-    path("api/v1/servers/", include("projectile.server.rest.urls")),
-    path("api/v1/search/", include("projectile.elastic.rest.urls")),
-
 ]
 
-jwt_urls = [
+package_urls = [
+    # JWT
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-]
-
-
-swagger_urls = [
+    # Swagger
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger-ui/",
@@ -40,9 +48,9 @@ swagger_urls = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
+    # Profilers
+    path("silk/", include("silk.urls", namespace="silk")),
 ]
 
-profiler_urls = [path("silk/", include("silk.urls", namespace="silk"))]
 
-
-urlpatterns = django_app_urls + jwt_urls + swagger_urls + profiler_urls
+urlpatterns = project_urls + ws_urls + django_app_urls + package_urls

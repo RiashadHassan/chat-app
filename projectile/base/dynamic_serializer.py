@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-User = get_user_model()
+from projectile.core.models import User
+from projectile.server.models import Server
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -29,4 +30,9 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 class UserDynamicSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = User
+        fields = "__all__"
+
+class ServerDynamicSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Server
         fields = "__all__"
