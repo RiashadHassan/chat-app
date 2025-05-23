@@ -4,11 +4,9 @@ services:
     container_name: projectile_web
     build:
       context: .
-      dockerfile: docker/Dockerfile
-    # mount the entire repo to get live reload on code changes
+      dockerfile: docker/projectile/Dockerfile
     volumes:
       - .:/app
-    # ensure we’re in the right folder for manage.py
     working_dir: /app/projectile
     command: python manage.py runserver 0.0.0.0:8000
     ports:
@@ -19,6 +17,34 @@ services:
       - db
       - redis
       - elasticsearch
+      - chat_service
+
+  chat_service:
+    container_name: projectile_chat_service
+    build:
+      context: .
+      dockerfile: docker/chat_service/Dockerfile
+    volumes:
+      - ./chat_service:/app
+    working_dir: /app/app
+    command: uvicorn main:app --host 0.0.0.0 --port 9000 --reload
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env
+    depends_on:
+      - scylla
+
+  scylla:
+    container_name: projectile_scylla
+    image: scylladb/scylla:5.4
+    ports:
+      - "9042:9042"   # native CQL port
+      - "10000:10000" # REST API (optional)
+    volumes:
+      - scylla_data:/var/lib/scylla
+    environment:
+      SCYLLA_CLUSTER_NAME: "projectile_cluster"
 
   db:
     container_name: projectile_db
@@ -51,7 +77,7 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
 
-
 volumes:
   postgres_data:
   elasticsearch_data:
+  scylla_data:

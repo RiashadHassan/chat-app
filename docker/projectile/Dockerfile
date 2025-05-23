@@ -7,7 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 # install dependencies
 WORKDIR /app
-COPY docker/requirements/requirements.txt /app/requirements.txt
+COPY docker/projectile/requirements/requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && \
     pip install -r /app/requirements.txt
 
