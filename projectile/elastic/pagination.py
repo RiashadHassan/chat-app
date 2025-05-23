@@ -41,8 +41,8 @@ class ElasticSearchAfterPagination:
         except ValueError:
             size = self.DEFAULT_PAGE_SIZE
 
-        search_after_date: str = params.get("search_after_date")
-        search_after_uid: str = params.get("search_after_uid")
+        search_after_date: str = params.get("sad")
+        search_after_uid: str = params.get("sau")
 
         pagination_params = {
             "size": size,

@@ -184,7 +184,6 @@ class RolePermission(BaseModelWithUID):
     permission_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     class Meta:
-        unique_together = ("role", "permission")
         constraints = [
             models.UniqueConstraint(
                 fields=["role", "permission"], name="unique_role_permission"
