@@ -1,8 +1,7 @@
-# chat_service/app/main.py
 from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/health")
+@app.get("/")
 def health_check():
-    return {"status": "ok"}
+    return {"Status": "Welcome to the Chat Service!"}

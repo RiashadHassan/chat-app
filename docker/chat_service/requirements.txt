@@ -1,4 +1,7 @@
 fastapi
 uvicorn[standard]
 cassandra-driver  # for ScyllaDB (compatible)
-python-dotenv     # if you want to read from .env
+python-dotenv
+sqlalchemy
+sqlalchemy[asyncio]  # for async supportW
+asyncpg
