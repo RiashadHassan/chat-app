@@ -1,14 +1,12 @@
 from django.urls import path
 from ..views.member import (
-    MemberCreateView,
-    MemberListView,
+    MemberListCreateView,
     MemberDetailsView,
     MemberDestroyView,
 )
 
 urlpatterns = [
-    path("", MemberListView.as_view(), name="member-list"),
-    path("", MemberCreateView.as_view(), name="member-create"),
+    path("", MemberListCreateView.as_view(), name="member-list-create"),
     path(
         "<uuid:m_uid>/",
         MemberDetailsView.as_view(),

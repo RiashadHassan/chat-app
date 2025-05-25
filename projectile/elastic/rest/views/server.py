@@ -9,15 +9,17 @@ class ServerSearchView(ElasticSearchAPIView):
     serializer_class = ServerSearchSerializer
 
     def get(self, request, *args, **kwargs):
+        name = request.query_params.get("name")
+        owner = request.query_params.get("owner_uid")
+        order = request.query_params.get("order")
+
         search = ServerDocument.search()
 
         # sorting - required for search_after pagination
-        search = search.sort("-created_at", "uid")
+        timestamp_ordering = "created_at" if order == "ASC" else "-created_at"
+        search = search.sort(timestamp_ordering, "uid")
 
         # filtering via query params
-        name = request.query_params.get("name")
-        owner = request.query_params.get("owner_uid")
-
         if name:
             search = search.query("match", name=name)
 

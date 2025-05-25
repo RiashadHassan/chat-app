@@ -25,6 +25,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "silk",
     "django_elasticsearch_dsl",
+    "corsheaders",
 ]
 
 INSTALLED_APPS = ON_TOP_APPS + DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS

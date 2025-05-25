@@ -18,9 +18,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=120)
     last_name = models.CharField(max_length=120)
     email = models.EmailField(unique=True)
-    phone = PhoneNumberField(
-        unique=True,
-    )
+    phone = PhoneNumberField(unique=True, null=True, blank=True)
     status = models.CharField(
         choices=StatusChoices.choices, default=StatusChoices.OFFLINE
     )
@@ -37,7 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def save(self, *args, **kwargs):
-        self.updated_at = timezone.now() 
+        self.updated_at = timezone.now()
         return super().save()
 
     def __str__(self):

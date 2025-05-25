@@ -2,14 +2,14 @@ from django.db import transaction
 
 from rest_framework import serializers
 
-from projectile.base.dynamic_serializer import ServerDynamicSerializer
 from projectile.member.models import Member
 
 
-class MemberCreateSerializer(serializers.ModelSerializer):
+class MemberListCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = []
+        fields = ["uid", "user_uid", "server_uid"]
+        read_only_fields = ["uid", "user_uid", "server_uid"]
 
     @transaction.atomic
     def create(self, validated_data):
@@ -25,14 +25,6 @@ class MemberCreateSerializer(serializers.ModelSerializer):
             validated_data["server"] = server
             member = super().create(validated_data)
         return member
-
-
-class MemberListSerializer(serializers.ModelSerializer):
-    # server = ServerDynamicSerializer(fields=("uid", "name"), read_only=True)
-
-    class Meta:
-        model = Member
-        fields = ["uid", "user_uid", "server_uid"]
 
 
 class MemberDetailsSerializer(serializers.ModelSerializer):

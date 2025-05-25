@@ -10,7 +10,7 @@ from .addons.asgi_config import *
 from .addons.installed_apps import *
 from .addons.middlware import *
 
-
+CORS_ALLOW_ALL_ORIGINS = True
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR.parent, ".env"))
 
