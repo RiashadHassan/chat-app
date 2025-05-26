@@ -22,9 +22,6 @@ class Server(BaseModelWithSlug):
     owner_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
-    is_deleted = models.BooleanField(
-        default=False, help_text="has server been soft deleted by owner?"
-    )
     description = models.TextField()
     member_limit = models.BigIntegerField(
         default=1000000, help_text="how many users can join this server?"
@@ -56,6 +53,10 @@ class Category(BaseModelWithSlug):
 
     # model fields
     position = models.FloatField(db_index=True)
+    is_private = models.BooleanField(
+        default=False,
+        help_text="is the category private? (only visible to members with access)",
+    )
 
     class Meta:
         ordering = ["position"]

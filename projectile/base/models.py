@@ -14,6 +14,10 @@ class BaseModelWithUID(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     metadata = models.JSONField(default=dict, blank=True)
+    is_deleted = models.BooleanField(
+        default=False,
+        help_text="Soft delete flag, not actually deleted from the database.",
+    )
 
     class Meta:
         abstract = True
