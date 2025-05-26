@@ -52,18 +52,3 @@ class UserRetrieveUpdateSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["uid", "created_at", "updated_at"]
 
-class UserListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            "uid",
-            "first_name",
-            "last_name",
-            "username",
-            "email",
-            "phone",
-            "created_at",
-            "updated_at",
-        ]
-
-        read_only_fields = ["uid", "created_at", "updated_at"]

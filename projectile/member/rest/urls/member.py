@@ -8,9 +8,9 @@ from ..views.member import (
 urlpatterns = [
     path("", MemberListCreateView.as_view(), name="member-list-create"),
     path(
-        "<uuid:m_uid>/",
+        "<uuid:member_uid>/",
         MemberDetailsView.as_view(),
         name="member-retreive-update",
     ),
-    path("<uuid:m_uid>/destroy/", MemberDestroyView.as_view(), name="member-destroy"),
+    path("<uuid:member_uid>/destroy/", MemberDestroyView.as_view(), name="member-destroy"),
 ]

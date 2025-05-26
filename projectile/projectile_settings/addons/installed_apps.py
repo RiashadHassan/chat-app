@@ -10,6 +10,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 PROJECT_APPS = [
+    "projectile.aquila",
     "projectile.base",
     "projectile.core",
     "projectile.chat",
