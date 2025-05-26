@@ -24,6 +24,7 @@ class ServerAdmin(admin.ModelAdmin):
         "banner_url",
     )
     list_per_page = 50
+    raw_id_fields = ("owner",)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -33,8 +34,9 @@ class ServerAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("uid", "slug", "server")
-    search_fields = ("uid", "slug", "server", "server__owner_uid")
+    search_fields = ("uid", "slug", "name", "server_uid")
     list_per_page = 50
+    raw_id_fields = ("server",)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -48,6 +50,7 @@ class ChannelAdmin(admin.ModelAdmin):
 
     search_fields = ("uid", "name", "slug", "server_uid", "category_uid")
     list_per_page = 50
+    raw_id_fields = ("server", "category")
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -59,8 +62,9 @@ class ThreadAdmin(admin.ModelAdmin):
     list_display = ("uid", "name", "slug", "server", "category", "channel")
     list_filter = ("is_archived", "auto_archive_duration")
 
-    search_fields = ("uid", "name", "slug", "server", "category", "channel")
+    search_fields = ("uid", "name", "slug", "server_uid", "category_uid", "channel_uid")
     list_per_page = 50
+    raw_id_fields = ("server", "category", "channel")
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -78,6 +82,7 @@ class RoleAdmin(admin.ModelAdmin):
         "server__name",
     )
     list_per_page = 50
+    raw_id_fields = ("server",)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -89,6 +94,7 @@ class RolePermissionAdmin(admin.ModelAdmin):
     list_display = ("role", "permission")
     search_fields = ("role__name", "role_uid", "permission_uid", "permission__name")
     list_per_page = 50
+    raw_id_fields = ("role", "permission")
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
