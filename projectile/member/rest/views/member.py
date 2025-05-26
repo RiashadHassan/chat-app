@@ -54,10 +54,10 @@ class MemberDestroyView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self) -> Member:
-        memember_uid = self.kwargs.get("member_uid")
-        if self.request.user.uid != memember_uid:
+        member_uid = self.kwargs.get("member_uid")
+        if self.request.user.uid != member_uid:
             raise exceptions.PermissionDenied()
-        return get_object_or_404(Member, uid=memember_uid)
+        return get_object_or_404(Member, uid=member_uid)
 
     def perform_destroy(self, instance: Member) -> None:
         instance.is_active = False
