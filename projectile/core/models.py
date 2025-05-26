@@ -13,7 +13,9 @@ from projectile.core.manager import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    uid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    uid = models.UUIDField(
+        max_length=36, default=uuid.uuid4, editable=False, unique=True
+    )
     username = models.CharField(max_length=120, unique=True)
     first_name = models.CharField(max_length=120)
     last_name = models.CharField(max_length=120)

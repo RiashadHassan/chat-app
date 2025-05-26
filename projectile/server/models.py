@@ -227,3 +227,40 @@ class RolePermission(BaseModelWithUID):
 #     # model fields
 #     action = models.CharField(db_index=True)
 #     details = models.TextField(blank=True)
+
+
+class Invite(BaseModelWithUID):
+    # foreignkey fields
+    server = models.ForeignKey(
+        "server.Server", on_delete=models.CASCADE, related_name="invites"
+    )
+    server_uid = models.CharField(max_length=36, db_index=True, blank=True)
+    channel = models.ForeignKey(
+        "server.Channel",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="invites",
+    )
+    channel_uid = models.CharField(max_length=36, db_index=True, blank=True)
+    inviter = models.ForeignKey(
+        "core.User",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="sent_invites",
+    )
+    inviter_uid = models.CharField(max_length=36, db_index=True, blank=True)
+
+    # model fields
+    code = models.CharField(max_length=32, unique=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    revoked = models.BooleanField(default=False)
+    uses = models.IntegerField(default=0)
+    max_uses = models.IntegerField(default=0, help_text="0 means unlimited")
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Invite: {self.code} - Server: {self.server} - Inviter: {self.inviter}"

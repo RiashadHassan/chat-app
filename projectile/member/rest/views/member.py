@@ -19,6 +19,8 @@ from ..serializers.member import (
 
 
 class MemberListCreateView(ListCreateAPIView):
+    """The create endpoint is basically the "join-server" functionality"""
+
     queryset = Member.objects.all()
     serializer_class = MemberListCreateSerializer
     permission_classes = [IsAuthenticated]
