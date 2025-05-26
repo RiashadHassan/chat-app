@@ -17,8 +17,8 @@ class MemberListCreateSerializer(serializers.ModelSerializer):
         server = self.context["server"]
         try:
             member = Member.objects.get(user_uid=user.uid, server_uid=server.uid)
-            if not member.is_active:
-                member.is_active = True
+            if member.is_deleted:
+                member.is_deleted = False
                 member.save()
         except Member.DoesNotExist:
             validated_data["user"] = user
@@ -30,5 +30,5 @@ class MemberListCreateSerializer(serializers.ModelSerializer):
 class MemberDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ["uid", "is_active", "accessible_channels"]
+        fields = ["uid", "is_deleted", "accessible_channels"]
         read_only_fields = fields

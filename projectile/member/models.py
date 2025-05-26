@@ -16,8 +16,7 @@ class Member(BaseModelWithUID):
 
     # model fields
     accessible_channels = models.JSONField(default=dict, blank=True)
-    is_active = models.BooleanField(default=True)
-    
+
     class Meta:
         constraints = [
             models.UniqueConstraint(

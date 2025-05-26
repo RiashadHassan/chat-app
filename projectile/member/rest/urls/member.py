@@ -1,16 +1,14 @@
 from django.urls import path
 from ..views.member import (
-    MemberListCreateView,
+    ServerJoinView,
+    ServerLeaveView,
+    MemberListView,
     MemberDetailsView,
-    MemberDestroyView,
 )
 
 urlpatterns = [
-    path("", MemberListCreateView.as_view(), name="member-list-create"),
-    path(
-        "<uuid:member_uid>/",
-        MemberDetailsView.as_view(),
-        name="member-retreive-update",
-    ),
-    path("<uuid:member_uid>/destroy/", MemberDestroyView.as_view(), name="member-destroy"),
+    path("join/", ServerJoinView.as_view(), name="member-join-server"),
+    path("leave/", ServerLeaveView.as_view(), name="member-leave-server"),
+    path("<uuid:member_uid>/", MemberDetailsView.as_view(), name="member-details"),
+    path("", MemberListView.as_view(), name="member-list"),
 ]
