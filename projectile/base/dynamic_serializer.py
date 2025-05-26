@@ -1,9 +1,15 @@
-from django.contrib.auth import get_user_model
-
 from rest_framework import serializers
 
 from projectile.core.models import User
-from projectile.server.models import Server
+from projectile.server.models import (
+    Server,
+    Category,
+    Channel,
+    Thread,
+    Role,
+    RolePermission,
+    Invite,
+)
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -32,7 +38,44 @@ class UserDynamicSerializer(DynamicFieldsModelSerializer):
         model = User
         fields = "__all__"
 
+
 class ServerDynamicSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Server
+        fields = "__all__"
+
+
+class CategoryDynamicSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
+class ChannelDynamicSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Channel
+        fields = "__all__"
+
+
+class ThreadDynamicSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Thread
+        fields = "__all__"
+
+
+class RoleDynamicSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Role
+        fields = "__all__"
+
+
+class RolePermissionDynamicSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = RolePermission
+        fields = "__all__"
+
+
+class InviteDynamicSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Invite
         fields = "__all__"
