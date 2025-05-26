@@ -10,9 +10,7 @@ from rest_framework.generics import (
 from projectile.base.permissions import IsSuperUser
 from projectile.core.models import User
 
-from projectile.core.rest.serializers.user import (
-    UserRetrieveUpdateSerializer,
-)
+from projectile.core.rest.serializers.user import UserDetailsSerializer
 
 from ..serializers.user import UserListSerializer
 
@@ -38,9 +36,9 @@ class UserListView(ListAPIView):
         return self.queryset
 
 
-class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class UserDetailsView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
-    serializer_class = UserRetrieveUpdateSerializer
+    serializer_class = UserDetailsSerializer
     lookup_field = "uid"
     lookup_url_kwarg = "uid"
     permission_classes = [IsSuperUser]

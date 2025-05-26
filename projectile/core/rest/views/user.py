@@ -8,10 +8,7 @@ from rest_framework.generics import (
 
 from projectile.core.models import User
 
-from ..serializers.user import (
-    UserRegisterSerializer,
-    UserRetrieveUpdateSerializer,
-)
+from ..serializers.user import UserRegisterSerializer, UserDetailsSerializer
 
 
 # PUBLIC VIEW
@@ -24,7 +21,7 @@ class UserRegisterView(CreateAPIView):
 # PRIVATE USER VIEWS (FOR OWN PROFILE)
 class PrivateUserDetailsView(RetrieveUpdateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserRetrieveUpdateSerializer
+    serializer_class = UserDetailsSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self) -> User:

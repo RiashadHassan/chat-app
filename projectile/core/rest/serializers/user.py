@@ -36,7 +36,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserRetrieveUpdateSerializer(serializers.ModelSerializer):
+class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
