@@ -1,7 +1,10 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from projectile.base.dynamic_serializer import UserDynamicSerializer
+from projectile.base.dynamic_serializer import (
+    UserDynamicSerializer,
+    CategoryDynamicSerializer,
+)
 from projectile.server.models import Server
 
 
@@ -37,8 +40,12 @@ class ServerListCreateSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class ServerRetrieveSerializer(serializers.ModelSerializer):
+class ServerDetailsSerializer(serializers.ModelSerializer):
     owner = UserDynamicSerializer(fields=("uid", "username", "status"), read_only=True)
+    categories = CategoryDynamicSerializer(
+        fields=("uid","name"), many=True,
+        read_only=True,
+    )
 
     class Meta:
         model = Server

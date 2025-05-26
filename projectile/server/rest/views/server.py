@@ -1,23 +1,18 @@
-from rest_framework.views import APIView
+from django.db.models import Prefetch, QuerySet
+
 from rest_framework.generics import (
-    get_object_or_404,
-    RetrieveAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
 
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from projectile.base.permissions import IsSuperUser
-from projectile.server.models import Server
+from projectile.server.models import Server, Category
 from projectile.server.permissions import IsOwner
 
 from projectile.server.rest.serializers.server import (
     ServerListCreateSerializer,
-    ServerRetrieveSerializer,
+    ServerDetailsSerializer,
 )
 
 
@@ -30,48 +25,37 @@ class ServerListCreateView(ListCreateAPIView):
             return [AllowAny()]  # so that anyone can access the server list
         return super().get_permissions()
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Server]:
         return Server.objects.filter(is_deleted=False).select_related("owner")
 
-    def get_serializer_context(self):
+    def get_serializer_context(self) -> dict:
         context = super().get_serializer_context()
         context["request"] = self.request
         return context
 
 
-class ServerRetrieveView(RetrieveAPIView):
-    queryset = (
-        Server.objects.filter(is_deleted=False)
-        .prefetch_related("categories")
-        .select_related("owner")
-    )
-    serializer_class = ServerRetrieveSerializer
+class ServerDetailsView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ServerDetailsSerializer
     lookup_field = "uid"
     lookup_url_kwarg = "uid"
 
+    def get_permissions(self) -> list:
+        if self.request.method == "GET":
+            return [IsAuthenticated()]
+        return [IsOwner()]
 
-class ServerUpdateView(UpdateAPIView):
-    queryset = (
-        Server.objects.filter(is_deleted=False)
-        .prefetch_related("categories")
-        .select_related("owner")
-    )
-    serializer_class = ServerRetrieveSerializer
-    lookup_field = "uid"
-    lookup_url_kwarg = "uid"
-    permission_classes = [IsOwner]
+    def get_queryset(self) -> QuerySet[Server]:
+        active_categories = Prefetch(
+            "categories",
+            queryset=(Category.objects.filter(is_deleted=False)),
+        )
+        queryset = (
+            Server.objects.filter(is_deleted=False)
+            .prefetch_related(active_categories)
+            .select_related("owner")
+        )
+        return queryset
 
-
-class ServerDestroyView(DestroyAPIView):
-    queryset = Server.objects.filter(is_deleted=False)
-    lookup_field = "uid"
-    lookup_url_kwarg = "uid"
-    permission_classes = [IsOwner]
-
-    def get_object(self):
-        uid = self.kwargs.get("uid")
-        return get_object_or_404(Server, uid=uid)
-
-    def perform_destroy(self, instance):
+    def perform_destroy(self, instance: Server) -> None:
         instance.is_deleted = True
         instance.save()
