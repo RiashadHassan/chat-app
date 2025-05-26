@@ -5,6 +5,13 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+# create a user with UID and GID matching host
+ARG UID=1000
+ARG GID=1000
+
+RUN addgroup --gid $GID appgroup && \
+    adduser --disabled-password --gecos "" --uid $UID --gid $GID appuser
+
 # install dependencies
 WORKDIR /app
 COPY docker/projectile/requirements/requirements.txt /app/requirements.txt
@@ -16,6 +23,9 @@ WORKDIR /app/projectile
 
 # in dev the volume mount overrides this, so it’s harmless:
 COPY projectile/ /app/projectile/
+
+# switch to non-root user
+USER appuser
 
 EXPOSE 8000
 
