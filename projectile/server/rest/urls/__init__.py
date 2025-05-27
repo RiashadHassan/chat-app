@@ -7,4 +7,8 @@ urlpatterns = [
         "<uuid:server_uid>/categories/",
         include("projectile.server.rest.urls.category"),
     ),
+    path(
+        "invites/",
+        include("projectile.server.rest.urls.invite"),
+    ),
 ]

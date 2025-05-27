@@ -262,3 +262,13 @@ class Invite(BaseModelWithUID):
 
     def __str__(self):
         return f"Invite: {self.code} - Server: {self.server} - Inviter: {self.inviter}"
+
+    @property
+    def is_valid(self):
+        if self.is_deleted or self.server.is_deleted:
+            return False
+        if self.expires_at and self.expires_at < timezone.now():
+            return False
+        if self.max_uses and self.uses >= self.max_uses:
+            return False
+        return True
