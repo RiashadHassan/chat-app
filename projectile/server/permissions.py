@@ -8,7 +8,6 @@ class IsOwner(BasePermission):
     def has_permission(self, request, view):
         uid = view.kwargs.get("server_uid")
         server = get_object_or_404(Server, uid=uid)
-        data = server.server_data.get("owner")
-        if data and str(request.user.uid) in data:
+        if server.owner == request.user:
             return True
         return False

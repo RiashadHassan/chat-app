@@ -1,4 +1,5 @@
 ASGI_APPLICATION = "projectile_settings.asgi.application"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

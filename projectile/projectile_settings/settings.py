@@ -1,5 +1,4 @@
 import os
-import dj_database_url
 
 from pathlib import Path
 from dotenv import load_dotenv
@@ -7,13 +6,16 @@ from dotenv import load_dotenv
 
 # importing external congigs for additional settings values
 from .addons.asgi_config import *
+from .addons.database import *
 from .addons.installed_apps import *
 from .addons.middlware import *
+from .addons.wsgi_config import *
 
-CORS_ALLOW_ALL_ORIGINS = True
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR.parent, ".env"))
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
@@ -40,57 +42,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = "settings.settings.wsgi.application"
-
-# DATABASE_ROUTERS = ["projectile.base.db_router.DatabaseRouter"]
-
-DATABASES = {
-    "default": dj_database_url.config(env="DATABASE_URL", conn_max_age=600),
-    # "replica": dj_database_url.config(env="REPLICA_DATABASE_URL", conn_max_age=600),
-}
-
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
-
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",  # required for /auth/login
-    ),
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    # "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 200,
-}
-
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'http://elasticsearch:9200'  # use service name from docker-compose
-    },
-}
-
-
-SPECTACULAR_SETTINGS = {
-    "TITLE": "...",
-    "DESCRIPTION": "---",
-    "VERSION": "0.0.1",
-    "SERVE_INCLUDE_SCHEMA": False,
-}
-
 
 LANGUAGE_CODE = "en-us"
 
