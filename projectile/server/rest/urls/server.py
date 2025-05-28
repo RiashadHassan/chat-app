@@ -7,6 +7,6 @@ from ..views.server import (
 urlpatterns = [
     path("", ServerListCreateView.as_view(), name="server-list-create"),
     path(
-        "<uuid:uid>/", ServerDetailsView.as_view(), name="server-details"
+        "<uuid:server_uid>/", ServerDetailsView.as_view(), name="server-details"
     ),
 ]

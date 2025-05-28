@@ -7,7 +7,7 @@ from ..views.user import (
 urlpatterns = [
     path("", UserListView.as_view(), name="list-user"),
     path(
-        "<uuid:uid>/",
+        "<uuid:user_uid>/",
         UserDetailsView.as_view(),
         name=("retrieve-update-destroy-user"),
     ),

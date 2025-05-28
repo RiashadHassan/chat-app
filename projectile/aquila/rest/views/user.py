@@ -40,7 +40,7 @@ class UserDetailsView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailsSerializer
     lookup_field = "uid"
-    lookup_url_kwarg = "uid"
+    lookup_url_kwarg = "user_uid"
     permission_classes = [IsSuperUser]
 
     def get_queryset(self) -> QuerySet[User]:

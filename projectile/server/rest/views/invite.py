@@ -4,11 +4,12 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework import status, exceptions
 from rest_framework.response import Response
-from rest_framework.generics import ListCreateAPIView, get_object_or_404
+from rest_framework.generics import ListCreateAPIView, DestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
 from projectile.server.models import Server, Invite
 from projectile.server.utils import generate_invite_code
+from projectile.server.permissions import IsOwner
 
 from projectile.member.models import Member
 
@@ -20,6 +21,11 @@ class InviteListCreateView(ListCreateAPIView):
         IsAuthenticated
     ]  # TODO: need to add IsMember permission class
     serializer_class = InviteListCreateSerializer
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [IsOwner()]
+        return super().get_permissions()
 
     def get_queryset(self):
         return Invite.objects.filter(
@@ -41,6 +47,29 @@ class InviteListCreateView(ListCreateAPIView):
         except Exception as e:
             # TODO: log the error
             raise exceptions.APIException(detail="Failed to create invitation.")
+
+
+class ExpireInviteView(DestroyAPIView):
+    permission_classes = [IsOwner]
+
+    def destroy(self, request, *args, **kwargs):
+        code = self.kwargs.get("code")
+        invite = get_object_or_404(Invite, code=code)
+
+        if not invite.is_valid:
+            return Response(
+                {"detail": "Invite is invalid or already expired."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        else:
+            invite.is_deleted = True
+            invite.save()
+
+        return Response(
+            {"detail": "Invite expired successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class AcceptInviteView(APIView):

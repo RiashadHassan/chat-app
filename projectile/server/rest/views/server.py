@@ -37,7 +37,7 @@ class ServerListCreateView(ListCreateAPIView):
 class ServerDetailsView(RetrieveUpdateDestroyAPIView):
     serializer_class = ServerDetailsSerializer
     lookup_field = "uid"
-    lookup_url_kwarg = "uid"
+    lookup_url_kwarg = "server_uid"
 
     def get_permissions(self) -> list:
         if self.request.method == "GET":
