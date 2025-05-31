@@ -11,11 +11,11 @@ COPY docker/chat_service/requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && \
     pip install -r /app/requirements.txt
 
-# copy application source
-COPY chat_service/app /app/app
+# copy application source (including app/, scripts/, main.py)
+COPY chat_service /app
 
-# set working dir where main.py lives
-WORKDIR /app/app
+# WORKDIR is the chat_app/chat_service directory
+WORKDIR /app
 
 EXPOSE 9000
 

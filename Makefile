@@ -1,6 +1,7 @@
 # variables
 COMPOSE = docker compose
 APP_NAME = web  # name of the service in the docker-compose.yml
+CHAT_APP_NAME = chat_service # name of the service in the docker-compose.yml
 
 # docker commands
 up:
@@ -36,6 +37,9 @@ shell_plus:
 
 bash:
 	$(COMPOSE) exec $(APP_NAME) /bin/bash
+	
+chat_bash:
+	$(COMPOSE) exec $(CHAT_APP_NAME) /bin/bash
 
 run:
 	$(COMPOSE) exec $(APP_NAME) python manage.py runserver 0.0.0.0:8000

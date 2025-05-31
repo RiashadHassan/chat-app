@@ -26,12 +26,14 @@ services:
       dockerfile: docker/chat_service/Dockerfile
     volumes:
       - ./chat_service:/app
-    working_dir: /app/app
+    working_dir: /app
     command: uvicorn main:app --host 0.0.0.0 --port 9000 --reload
     ports:
       - "9000:9000"
     env_file:
-      - .env
+      - ./chat_service/.env
+    environment:
+      - PYTHONPATH=/app
     depends_on:
       - db
       # - scylla
