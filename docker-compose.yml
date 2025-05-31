@@ -33,18 +33,19 @@ services:
     env_file:
       - .env
     depends_on:
-      - scylla
+      - db
+      # - scylla
 
-  scylla:
-    container_name: projectile_scylla
-    image: scylladb/scylla:5.4
-    ports:
-      - "9042:9042"   # native CQL port
-      - "10000:10000" # REST API (optional)
-    volumes:
-      - scylla_data:/var/lib/scylla
-    environment:
-      SCYLLA_CLUSTER_NAME: "projectile_cluster"
+  # scylla:
+  #   container_name: projectile_scylla
+  #   image: scylladb/scylla:5.4
+  #   ports:
+  #     - "9042:9042"   # native CQL port
+  #     - "10000:10000" # REST API (optional)
+  #   volumes:
+  #     - scylla_data:/var/lib/scylla
+  #   environment:
+  #     SCYLLA_CLUSTER_NAME: "projectile_cluster"
 
   db:
     container_name: projectile_db
@@ -80,4 +81,4 @@ services:
 volumes:
   postgres_data:
   elasticsearch_data:
-  scylla_data:
+  # scylla_data:

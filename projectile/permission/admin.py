@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Permission
+
+
+@admin.register(Permission)
+class PermissionAdmin(admin.ModelAdmin):
+    list_display = ("uid", "name", "description")
+    search_fields = ("uid", "name", "description")
+    list_filter = ("is_deleted",)
+    list_per_page = 50
