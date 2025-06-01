@@ -3,6 +3,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
+from app.chat.api import channel
+
 from app.user.api import user
 from app.db.scylla import setup_keyspace_and_table
 
@@ -25,3 +27,4 @@ def health_check():
 
 
 app.include_router(user.router, prefix="/users")
+app.include_router(channel.router, prefix="/messages")
