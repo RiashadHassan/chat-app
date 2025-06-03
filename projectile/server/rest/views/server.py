@@ -8,7 +8,7 @@ from rest_framework.generics import (
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from projectile.server.models import Server, Category
-from projectile.server.permissions import IsOwner
+from projectile.server.permissions import IsOwner, IsMember, IsMemberCached
 
 from projectile.server.rest.serializers.server import (
     ServerListCreateSerializer,
@@ -41,7 +41,7 @@ class ServerDetailsView(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self) -> list:
         if self.request.method == "GET":
-            return [IsAuthenticated()]
+            return [IsMemberCached(), IsMember()]
         return [IsOwner()]
 
     def get_queryset(self) -> QuerySet[Server]:

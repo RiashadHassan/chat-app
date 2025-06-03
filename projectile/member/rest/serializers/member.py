@@ -16,7 +16,7 @@ class MemberListCreateSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         server = self.context["server"]
         try:
-            member = Member.objects.get(user_uid=user.uid, server_uid=server.uid)
+            member = Member.objects.get(user=user, server=server)
             if member.is_deleted:
                 member.is_deleted = False
                 member.save()
