@@ -11,4 +11,8 @@ urlpatterns = [
         "<uuid:server_uid>/invites/",
         include("projectile.server.rest.urls.invite"),
     ),
+    path(
+        "<uuid:server_uid>/roles/",
+        include("projectile.server.rest.urls.role"),
+    ),
 ]
