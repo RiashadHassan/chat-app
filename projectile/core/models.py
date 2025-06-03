@@ -32,6 +32,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_deleted = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
 
+    metadata = models.JSONField(default=dict)
+    server_data = models.JSONField(default=dict)
+
     USERNAME_FIELD = "email"
 
     objects = CustomUserManager()
