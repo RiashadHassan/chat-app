@@ -5,11 +5,7 @@ from dotenv import load_dotenv
 
 
 # importing external congigs for additional settings values
-from .addons.asgi_config import *
-from .addons.database import *
-from .addons.installed_apps import *
-from .addons.middlware import *
-from .addons.wsgi_config import *
+from .addons import *
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
