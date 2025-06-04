@@ -1,3 +1,4 @@
+from typing import List
 from django.db.models import Prefetch, QuerySet
 
 from rest_framework.generics import (
@@ -5,7 +6,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import BasePermission, AllowAny, IsAuthenticated
 
 from projectile.server.models import Server, Category
 from projectile.server.permissions import IsOwner, IsMember, IsMemberCached
@@ -28,18 +29,13 @@ class ServerListCreateView(ListCreateAPIView):
     def get_queryset(self) -> QuerySet[Server]:
         return Server.objects.filter(is_deleted=False).select_related("owner")
 
-    def get_serializer_context(self) -> dict:
-        context = super().get_serializer_context()
-        context["request"] = self.request
-        return context
-
 
 class ServerDetailsView(RetrieveUpdateDestroyAPIView):
     serializer_class = ServerDetailsSerializer
     lookup_field = "uid"
     lookup_url_kwarg = "server_uid"
 
-    def get_permissions(self) -> list:
+    def get_permissions(self) -> List[BasePermission]:
         if self.request.method == "GET":
             return [IsMemberCached(), IsMember()]
         return [IsOwner()]
@@ -57,5 +53,6 @@ class ServerDetailsView(RetrieveUpdateDestroyAPIView):
         return queryset
 
     def perform_destroy(self, instance: Server) -> None:
-        instance.is_deleted = True
-        instance.save()
+        if not instance.is_deleted:
+            instance.is_deleted = True
+            instance.save()
