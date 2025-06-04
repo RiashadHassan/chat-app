@@ -27,7 +27,11 @@ class BaseModelWithUID(models.Model):
             if isinstance(field, models.ForeignKey):
                 attr = f"{field.name}_uid"
                 if hasattr(self, attr):
-                    setattr(self, attr, getattr(getattr(self, field.name), "uid", None))
+                    fk_obj = getattr(self, field.name)
+                    uid_value = getattr(fk_obj, "uid", None)
+                    setattr(
+                        self, attr, str(uid_value) if uid_value is not None else None
+                    )
 
     def save(self, *args, **kwargs):
         self.updated_at = timezone.now()

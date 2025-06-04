@@ -82,8 +82,8 @@ class Command(BaseCommand):
                         description=self.fake.paragraph(),
                     )
                     servers.append(server)
-                except:
-                    self.stdout.write(f"Error creating Server for {user.email}!")
+                except Exception as e:
+                    self.stdout.write(f"Error creating Server for {user.email}!: {str(e)}")
                     continue
             self.stdout.write(self.style.SUCCESS("Fake Servers created!"))
             return servers
