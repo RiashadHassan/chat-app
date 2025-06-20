@@ -8,8 +8,11 @@ from django.contrib.auth.base_user import AbstractBaseUser
 
 from phonenumber_field.modelfields import PhoneNumberField
 
-from projectile.core.choices import StatusChoices
+from projectile.base.models import BaseModelWithSlug
+from projectile.core.choices import GeneralStatusChoices, UserStatusChoices
 from projectile.core.manager import CustomUserManager
+
+from projectile.server.models import ServerSpectrum
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -22,7 +25,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     phone = PhoneNumberField(unique=True, null=True, blank=True)
     status = models.CharField(
-        choices=StatusChoices.choices, default=StatusChoices.OFFLINE
+        choices=UserStatusChoices.choices, default=UserStatusChoices.OFFLINE
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -47,4 +50,31 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.username} : {self.email}"
 
 
-# class UserDetails(models.Model):
+class Spectrum(BaseModelWithSlug):
+    # model fields
+    description = models.CharField(max_length=255, blank=True)
+    server_count = models.BigIntegerField(default=0, blank=True, db_index=True)
+
+    # m2m fields
+    servers = models.ManyToManyField(
+        to="server.Server", through="server.ServerSpectrum", related_name="spectra"
+    )
+    # url fields
+    icon_url = models.TextField(default="", blank=True)
+
+    class Meta:
+        verbose_name_plural = "Spectra"
+        ordering = ["-server_count", "name"]
+
+    def __str__(self):
+        return f"Spectrum: {self.name} - {self.server_count} servers"
+
+    def update_server_count(self):
+        self.server_count = ServerSpectrum.objects.filter(
+            spectrum=self, server__is_deleted=False
+        ).count()
+        self.save(update_fields=["server_count"])
+
+    @property
+    def active_servers(self):
+        return self.servers.filter(is_deleted=False)

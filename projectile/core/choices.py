@@ -1,7 +1,14 @@
 from django.db import models
 
 
-class StatusChoices(models.TextChoices):
+class GeneralStatusChoices(models.TextChoices):
+    ACTIVE = "active", "ACTIVE"
+    INACTIVE = "inactive", "INACTIVE"
+    ARCHIVED = "archived", "ARCHIVED"
+    OTHER = "other", "OTHER"
+
+
+class UserStatusChoices(models.TextChoices):
     ACTIVE = "active", "ACTIVE"
     INACTIVE = "inactive", "INACTIVE"
     ONLINE = "online", "ONLINE"

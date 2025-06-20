@@ -17,6 +17,7 @@ class BaseModelWithUID(models.Model):
     is_deleted = models.BooleanField(
         default=False,
         help_text="Soft delete flag, not actually deleted from the database.",
+        db_index=True,
     )
 
     class Meta:
@@ -45,3 +46,7 @@ class BaseModelWithSlug(BaseModelWithUID):
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        # Should never be triggered. child models should always override this method.
+        return f"{self._meta.model_name}: {getattr(self, 'name', super().__str__())}"

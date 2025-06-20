@@ -17,9 +17,34 @@ you can't afford 10 second long queries because you have to make join operations
 """
 
 
+class ServerSpectrum(BaseModelWithUID):
+    # foreignkey fields
+    spectrum = models.ForeignKey(
+        "core.Spectrum", on_delete=models.PROTECT, related_name="spectrum_links"
+    )
+    spectrum_uid = models.CharField(max_length=36, db_index=True, blank=True)
+    server = models.ForeignKey(
+        "server.Server", on_delete=models.CASCADE, related_name="server_links"
+    )
+    server_uid = models.CharField(max_length=36, db_index=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["spectrum", "server"], name="unique_server_spectrum"
+            )
+        ]
+
+    def __str__(self):
+        return f"Spectrum: {self.spectrum_uid} - Server: {self.server_uid}"
+
+
 class Server(BaseModelWithSlug):
     # foreignkey fields
-    owner = models.ForeignKey("core.User", on_delete=models.PROTECT)
+    owner = models.ForeignKey(
+        "core.User", on_delete=models.PROTECT, related_name="owned_servers"
+    )
     owner_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     # model fields
@@ -33,6 +58,9 @@ class Server(BaseModelWithSlug):
     # url fields
     icon_url = models.TextField(default="", blank=True)
     banner_url = models.TextField(default="", blank=True)
+
+    # reverse relation fields
+    # call "spectra" to fetch all the spectrums of a server instance
 
     def save(self, *args, **kwargs):
         if not self.owner:

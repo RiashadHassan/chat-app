@@ -30,6 +30,7 @@ class Command(BaseCommand):
         channels = self.create_channels(categories)
         self.create_threads(channels)
 
+        call_command("load_spectra")
         call_command("load_permissions")
 
     def create_superuser(self):
@@ -83,7 +84,9 @@ class Command(BaseCommand):
                     )
                     servers.append(server)
                 except Exception as e:
-                    self.stdout.write(f"Error creating Server for {user.email}!: {str(e)}")
+                    self.stdout.write(
+                        f"Error creating Server for {user.email}!: {str(e)}"
+                    )
                     continue
             self.stdout.write(self.style.SUCCESS("Fake Servers created!"))
             return servers
