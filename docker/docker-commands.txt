@@ -1,0 +1,130 @@
+# Docker Commands Cheat Sheet - Most Used Commands
+# Use as a reference for daily Docker work
+
+# ---------------------------
+# IMAGES
+# ---------------------------
+
+# Build an image from a Dockerfile in current directory, tag it
+docker build -t myapp:latest .
+
+# List all images on your system
+docker images
+
+# Remove one or more images by name or ID
+docker rmi <image_id_or_name>
+
+# Pull an image from a remote registry (Docker Hub or private)
+docker pull <image_name>
+
+# Push an image to a remote registry
+docker push <image_name>
+
+# ---------------------------
+# CONTAINERS
+# ---------------------------
+
+# Run a container from an image, map port 80 inside container to 8080 on host, detached mode
+docker run -d -p 8080:80 <image_name>
+
+# Run a container interactively (open shell)
+docker run -it <image_name> bash
+
+# List running containers
+docker ps
+docker ps -a #(including stopped)
+
+# Stop a running container by ID or name
+docker stop <container_id_or_name>
+
+# Start a stopped container by ID or name
+docker start <container_id_or_name>
+
+# Restart a container
+docker restart <container_id_or_name>
+
+# Remove a stopped container
+docker rm <container_id_or_name>
+
+# Force remove a running container
+docker rm -f <container_id_or_name>
+
+# View logs of a container
+docker logs <container_id_or_name>
+
+# Execute command inside a running container (interactive shell)
+docker exec -it <container_id_or_name> bash
+
+# Inspect detailed info of a container or image
+docker inspect <container_or_image_id>
+
+# ---------------------------
+# VOLUMES
+# ---------------------------
+
+# List all volumes
+docker volume ls
+
+# Create a named volume
+docker volume create <volume_name>
+
+# Remove a volume by name
+docker volume rm <volume_name>
+
+# Remove all unused volumes
+docker volume prune
+
+# ---------------------------
+# NETWORKS
+# ---------------------------
+
+# List networks
+docker network ls
+
+# Remove all unused networks
+docker network prune
+
+# ---------------------------
+# CLEANUP / PRUNE
+# ---------------------------
+
+# Remove all stopped containers
+docker container prune
+
+# Remove dangling images (untagged)
+docker image prune
+
+# Remove all unused images (dangling + unreferenced)
+docker image prune -a
+
+# Remove all unused volumes
+docker volume prune
+
+# Remove all unused networks
+docker network prune
+
+# System-wide prune: remove stopped containers, dangling images, unused networks
+docker system prune
+
+# System-wide prune including volumes
+docker system prune --volumes
+
+# ---------------------------
+# MISCELLANEOUS
+# ---------------------------
+
+# Show Docker version
+docker --version
+
+# Show Docker info (system-wide info)
+docker info
+
+# Show disk usage by Docker (images, containers, volumes, build cache)
+docker system df
+
+# Save an image to a tar file
+docker save -o myimage.tar <image_name>
+
+# Load an image from a tar file
+docker load -i myimage.tar
+
