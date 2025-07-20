@@ -1,5 +1,5 @@
 services:
-  web:
+  django_web:
     container_name: projectile_web
     build:
       context: .
@@ -8,8 +8,8 @@ services:
       - .:/app
     working_dir: /app/projectile
     command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - "8000:8000"
+    # ports:
+      # - "8000:8000"
     env_file:
       - .env
     user: "${UID}:${GID}"
@@ -36,18 +36,18 @@ services:
       - PYTHONPATH=/app
     depends_on:
       - db
-      - scylla
+      # - scylla
 
-  scylla:
-    container_name: projectile_scylla
-    image: scylladb/scylla:5.4
-    ports:
-      - "9042:9042"   # native CQL port
-      - "10000:10000" # REST API (optional)
-    volumes:
-      - scylla_data:/var/lib/scylla
-    environment:
-      SCYLLA_CLUSTER_NAME: "projectile_cluster"
+  # scylla:
+  #   container_name: projectile_scylla
+  #   image: scylladb/scylla:5.4
+  #   ports:
+  #     - "9042:9042"   # native CQL port
+  #     - "10000:10000" # REST API (optional)
+  #   volumes:
+  #     - scylla_data:/var/lib/scylla
+  #   environment:
+  #     SCYLLA_CLUSTER_NAME: "projectile_cluster"
 
   db:
     container_name: projectile_db
@@ -80,7 +80,20 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
 
+  nginx:
+    container_name: projectile_nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - django_web
+      - chat_service
+    restart: unless-stopped
+
+
 volumes:
   postgres_data:
   elasticsearch_data:
-  scylla_data:
+  # scylla_data:
