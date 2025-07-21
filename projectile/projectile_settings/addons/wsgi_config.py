@@ -1,4 +1,4 @@
-WSGI_APPLICATION = "settings.settings.wsgi.application"
+WSGI_APPLICATION = "projectile_settings.wsgi.application"
 
 
 AUTH_PASSWORD_VALIDATORS = [

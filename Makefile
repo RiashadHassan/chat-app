@@ -1,6 +1,6 @@
 # variables
 COMPOSE = docker compose
-APP_NAME = web  # name of the service in the docker-compose.yml
+APP_NAME = django_web  # name of the service in the docker-compose.yml
 CHAT_APP_NAME = chat_service # name of the service in the docker-compose.yml
 
 # docker commands

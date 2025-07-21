@@ -17,6 +17,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
 
+if DEBUG:
+    MIDDLEWARE = MIDDLEWARE + SILK_MIDDLEWARE
+
 ALLOWED_HOSTS = ["*"]
 
 ROOT_URLCONF = "projectile_settings.urls"
