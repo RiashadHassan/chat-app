@@ -8,11 +8,11 @@ from django.contrib.auth.base_user import AbstractBaseUser
 
 from phonenumber_field.modelfields import PhoneNumberField
 
-from projectile.base.models import BaseModelWithSlug
-from projectile.core.choices import GeneralStatusChoices, UserStatusChoices
-from projectile.core.manager import CustomUserManager
+from base.models import BaseModelWithSlug
+from core.choices import GeneralStatusChoices, UserStatusChoices
+from core.manager import CustomUserManager
 
-from projectile.server.models import ServerSpectrum
+from server.models import ServerSpectrum
 
 
 class User(AbstractBaseUser, PermissionsMixin):

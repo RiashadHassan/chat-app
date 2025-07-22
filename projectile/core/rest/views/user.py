@@ -6,7 +6,7 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
 )
 
-from projectile.core.models import User
+from core.models import User
 
 from ..serializers.user import UserRegisterSerializer, UserDetailsSerializer
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from projectile.core.models import User
+from core.models import User
 
 
 class UserListSerializer(serializers.ModelSerializer):

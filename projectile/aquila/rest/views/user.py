@@ -7,10 +7,10 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 
-from projectile.base.permissions import IsSuperUser
-from projectile.core.models import User
+from base.permissions import IsSuperUser
+from core.models import User
 
-from projectile.core.rest.serializers.user import UserDetailsSerializer
+from core.rest.serializers.user import UserDetailsSerializer
 
 from ..serializers.user import UserListSerializer
 

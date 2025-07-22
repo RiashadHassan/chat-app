@@ -2,7 +2,7 @@ from django.db import transaction
 
 from rest_framework import serializers
 
-from projectile.member.models import Member
+from member.models import Member
 
 
 class MemberListCreateSerializer(serializers.ModelSerializer):

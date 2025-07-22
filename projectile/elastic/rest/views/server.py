@@ -1,7 +1,7 @@
 from ...documents.server import ServerDocument
 from ..serializers.server import ServerSearchSerializer
 
-from projectile.elastic import ElasticSearchAPIView, ElasticSearchAfterPagination
+from elastic import ElasticSearchAPIView, ElasticSearchAfterPagination
 
 
 class ServerSearchView(ElasticSearchAPIView):

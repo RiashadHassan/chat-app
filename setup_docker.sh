@@ -13,9 +13,9 @@ fi
 
 # Check if user is already in docker group
 if id -nG "$USER_TO_FIX" | grep -qw docker; then
-    echo "✅ User '$USER_TO_FIX' already has Docker permissions."
+    echo "User '$USER_TO_FIX' already has Docker permissions."
 else
     echo "🔧 Adding user '$USER_TO_FIX' to the 'docker' group..."
     sudo usermod -aG docker "$USER_TO_FIX"
-    echo "✅ Done. Please log out and log back in, or run: newgrp docker"
+    echo "Done. Please log out and log back in, or run: newgrp docker"
 fi

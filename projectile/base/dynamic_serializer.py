@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from projectile.core.models import User
-from projectile.server.models import (
+from core.models import User
+from server.models import (
     Server,
     Category,
     Channel,

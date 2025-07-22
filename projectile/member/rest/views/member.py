@@ -10,7 +10,7 @@ from rest_framework.generics import (
     get_object_or_404,
 )
 
-from projectile.server.models import Server
+from server.models import Server
 
 from ...models import Member
 from ..serializers.member import (

@@ -9,8 +9,8 @@ class Command(BaseCommand):
     help = "Stress test concurrency limits by firing many simultaneous GET requests to a target URL."
 
     DEFAULT_URL = "http://127.0.0.1:8000/api/aquila/health/concurrency/"
-    DEFAULT_NUM_REQUESTS = 500
-    DEFAULT_TIMEOUT = 60
+    DEFAULT_NUM_REQUESTS = 5
+    DEFAULT_TIMEOUT = 600
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -54,10 +54,11 @@ class Command(BaseCommand):
 
             for future in concurrent.futures.as_completed(futures):
                 try:
-                    s, f, e = future.result()
+                    s, f, e, username = future.result()
                     success_count += s
                     fail_count += f
                     exception_count += e
+                    print(f"Response from future: {username}")
                 except Exception as ex:
                     self.stderr.write(f"Exception from future: {ex}")
                     exception_count += 1
@@ -75,10 +76,13 @@ class Command(BaseCommand):
             q_param = f"req-{index}"
             response = requests.get(url, params={"q": q_param}, timeout=timeout)
             print(f"[{index}] {response.status_code}")
+            data = response.json()
+            username = data.get("username")
+
             if response.status_code in [200, 201]:
-                return 1, 0, 0  # success, fail, exception
+                return 1, 0, 0, username  # success, fail, exception
             else:
-                return 0, 1, 0
+                return 0, 1, 0, f"Failed with status code: {response.status_code}"
         except Exception as e:
             print(f"[{index}] Exception: {e}")
-            return 0, 0, 1
+            return 0, 0, 1, f"Exception for req-{index}: {e}"  # success, fail, exception

@@ -4,9 +4,9 @@ from django.utils.timezone import now
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-from projectile.core.models import User
-from projectile.server.models import Server
-from projectile.member.models import Member
+from core.models import User
+from server.models import Server
+from member.models import Member
 
 logger = logging.getLogger(__name__)
 """

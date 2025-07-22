@@ -10,7 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "projectile.projectile_settings.
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
-from projectile.chat.routing import websocket_urlpatterns
+from chat.routing import websocket_urlpatterns
 
 application = ProtocolTypeRouter(
     {

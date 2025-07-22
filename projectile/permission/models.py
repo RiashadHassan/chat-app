@@ -1,6 +1,6 @@
 from django.db import models
 
-from projectile.base.models import BaseModelWithSlug
+from base.models import BaseModelWithSlug
 
 
 class Permission(BaseModelWithSlug):

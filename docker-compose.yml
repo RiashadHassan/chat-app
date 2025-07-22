@@ -7,7 +7,9 @@ services:
     volumes:
       - .:/app
     working_dir: /app/projectile
-    command: python manage.py runserver 0.0.0.0:8000
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: daphne -b 0.0.0.0 -p 8000 projectile_settings.asgi:application
+
     # ports:
       # - "8000:8000"
     env_file:

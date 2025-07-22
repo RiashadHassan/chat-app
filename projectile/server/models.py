@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils import timezone
 
-from projectile.base.models import BaseModelWithUID, BaseModelWithSlug
+from base.models import BaseModelWithUID, BaseModelWithSlug
 
-from projectile.server.choices import ChannelTypes
+from server.choices import ChannelTypes
 
 """
 IMPORTANT!!

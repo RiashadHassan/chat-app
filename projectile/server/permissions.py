@@ -2,8 +2,8 @@ from rest_framework import exceptions
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import BasePermission
 
-from projectile.server.models import Server
-from projectile.member.models import Member
+from server.models import Server
+from member.models import Member
 
 
 class IsOwner(BasePermission):

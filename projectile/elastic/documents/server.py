@@ -1,7 +1,7 @@
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
-from projectile.server.models import Server, Category
+from server.models import Server, Category
 
 
 @registry.register_document

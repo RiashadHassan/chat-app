@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from projectile.server.models import (
+from server.models import (
     Server,
     Category,
     Channel,

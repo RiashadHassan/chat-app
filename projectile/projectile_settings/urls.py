@@ -14,20 +14,20 @@ from drf_spectacular.views import (
 
 project_urls = [
     # for system administration only
-    path("api/aquila/", include("projectile.aquila.rest.urls")),
+    path("api/aquila/", include("aquila.rest.urls")),
     # for users (DB CRUD)
-    path("api/v1/core/", include("projectile.core.rest.urls")),
-    path("api/v1/servers/", include("projectile.server.rest.urls")),
+    path("api/v1/core/", include("core.rest.urls")),
+    path("api/v1/servers/", include("server.rest.urls")),
     path(
         "api/v1/servers/<uuid:server_uid>/members/",
-        include("projectile.member.rest.urls"),
+        include("member.rest.urls"),
     ),
     # for cache and search
-    path("api/v1/search/", include("projectile.elastic.rest.urls")),
+    path("api/v1/search/", include("elastic.rest.urls")),
 ]
 
 ws_urls = [
-    path("ws/v1/chat/", include("projectile.chat.urls")),
+    path("ws/v1/chat/", include("chat.urls")),
 ]
 
 

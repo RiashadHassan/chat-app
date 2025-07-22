@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 
-from projectile.core.models import Spectrum
+from core.models import Spectrum
 
 User = get_user_model()
 

@@ -9,10 +9,10 @@ from rest_framework.generics import (
     get_object_or_404,
 )
 
-from projectile.base.permissions import OrPermission
+from base.permissions import OrPermission
 
-from projectile.server.permissions import IsOwner, IsMember
-from projectile.server.models import Server, Role
+from server.permissions import IsOwner, IsMember
+from server.models import Server, Role
 from ..serializers.role import RoleListCreateSerializer, RoleDetailsSerializer
 
 

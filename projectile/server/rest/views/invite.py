@@ -7,11 +7,11 @@ from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
-from projectile.server.models import Server, Invite
-from projectile.server.utils import generate_invite_code
-from projectile.server.permissions import IsOwner
+from server.models import Server, Invite
+from server.utils import generate_invite_code
+from server.permissions import IsOwner
 
-from projectile.member.models import Member
+from member.models import Member
 
 from ..serializers.invite import InviteListCreateSerializer
 

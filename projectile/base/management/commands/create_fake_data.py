@@ -5,8 +5,8 @@ from django.db import transaction
 from django.core.management import BaseCommand, call_command
 from django.contrib.auth.hashers import make_password
 
-from projectile.core.models import User
-from projectile.server.models import Server, Category, Channel, Thread
+from core.models import User
+from server.models import Server, Category, Channel, Thread
 
 
 class Command(BaseCommand):

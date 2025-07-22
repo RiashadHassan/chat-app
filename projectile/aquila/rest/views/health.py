@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 
-from projectile.base.permissions import IsSuperUser
+from base.permissions import IsSuperUser
 
 
 class ConcurrencyAPIView(APIView):
@@ -20,8 +20,10 @@ class ConcurrencyAPIView(APIView):
         delimiter = request.query_params.get("q")
         for i in range(20):
             print(delimiter)
-            time.sleep(0.1)
-        return Response({"message": "something"})
+            # from core.models import User
+            # users = User.objects.first()
+            # time.sleep(0.1)
+        return Response({"username": "users.username", "delimiter": delimiter})
 
 
 class HealthCheckAPIView(APIView):

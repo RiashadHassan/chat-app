@@ -1,11 +1,11 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from projectile.base.dynamic_serializer import (
+from base.dynamic_serializer import (
     UserDynamicSerializer,
     CategoryDynamicSerializer,
 )
-from projectile.server.models import Server
+from server.models import Server
 
 
 class ServerListCreateSerializer(serializers.ModelSerializer):

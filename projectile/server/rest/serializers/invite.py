@@ -1,6 +1,6 @@
 from rest_framework import serializers, generics
 
-from projectile.server.models import Server, Invite
+from server.models import Server, Invite
 
 
 class InviteListCreateSerializer(serializers.ModelSerializer):

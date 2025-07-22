@@ -1,6 +1,6 @@
 from django.db import models
 
-from projectile.base.models import BaseModelWithUID, BaseModelWithSlug
+from base.models import BaseModelWithUID, BaseModelWithSlug
 
 
 class Member(BaseModelWithUID):

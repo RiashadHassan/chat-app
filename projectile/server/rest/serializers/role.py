@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from projectile.server.models import Role
+from server.models import Role
 
 
 class RoleListCreateSerializer(serializers.ModelSerializer):

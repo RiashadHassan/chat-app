@@ -8,10 +8,10 @@ from rest_framework.generics import (
 
 from rest_framework.permissions import BasePermission, AllowAny, IsAuthenticated
 
-from projectile.server.models import Server, Category
-from projectile.server.permissions import IsOwner, IsMember, IsMemberCached
+from server.models import Server, Category
+from server.permissions import IsOwner, IsMember, IsMemberCached
 
-from projectile.server.rest.serializers.server import (
+from server.rest.serializers.server import (
     ServerListCreateSerializer,
     ServerDetailsSerializer,
 )

@@ -9,8 +9,8 @@ from rest_framework.generics import (
 )
 
 
-from projectile.server.models import Category, Channel, Thread
-from projectile.server.permissions import IsOwner
+from server.models import Category, Channel, Thread
+from server.permissions import IsOwner
 from ..serializers.category import (
     CateogryListCreateSerializer,
     CateogryDetailsSerializer,
