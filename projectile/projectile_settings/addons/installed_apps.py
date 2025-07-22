@@ -1,6 +1,3 @@
-ON_TOP_APPS = [
-    "daphne",
-]
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -29,4 +26,4 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
-INSTALLED_APPS = ON_TOP_APPS + DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS

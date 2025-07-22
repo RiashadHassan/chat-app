@@ -8,7 +8,9 @@ services:
       - .:/app
     working_dir: /app/projectile
     # command: python manage.py runserver 0.0.0.0:8000
-    command: daphne -b 0.0.0.0 -p 8000 projectile_settings.asgi:application
+    # command: daphne -b 0.0.0.0 -p 8000 projectile_settings.asgi:application
+    command: uvicorn projectile_settings.asgi:application --host 0.0.0.0 --port 8000 --workers 4
+
 
     # ports:
       # - "8000:8000"
