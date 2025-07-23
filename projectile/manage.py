@@ -6,9 +6,9 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'projectile.projectile_settings.settings')
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE", "projectile.projectile_settings.settings"
+    )
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -20,5 +20,5 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

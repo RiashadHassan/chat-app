@@ -21,13 +21,15 @@ RUN pip install --upgrade pip && \
 # set the working dir to where manage.py lives
 WORKDIR /app/projectile
 
-# in dev the volume mount overrides this, so it’s harmless:
+# copy the contents of the projectile directory into the container, so that it can be used inside the container
 COPY projectile/ /app/projectile/
+
+# execute the entrypoint script
+COPY docker/projectile/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 # switch to non-root user
 USER appuser
 
 EXPOSE 8000
-
-# Default command – will run in /app/projectile
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
