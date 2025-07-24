@@ -85,8 +85,10 @@
     {{room_name|json_script:"room-name"}}
 
     <script>
+        const url_prefix = "/ws/v1/chat/"
+
         const host = window.location.host
-        url_prefix = "/ws/chat/"
+        
         const roomName = JSON.parse(document.getElementById("room-name").textContent);
         const message_input = document.querySelector("#chat-message-input");
         const message_submit = document.querySelector("#chat-message-submit");
