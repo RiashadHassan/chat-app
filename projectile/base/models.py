@@ -11,7 +11,7 @@ class BaseModelWithUID(models.Model):
     uid = models.CharField(
         max_length=36, default=uuid.uuid4, editable=False, unique=True
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(null=True, blank=True)
     metadata = models.JSONField(default=dict, blank=True)
     is_deleted = models.BooleanField(
@@ -48,5 +48,5 @@ class BaseModelWithSlug(BaseModelWithUID):
         abstract = True
 
     def __str__(self):
-        # Should never be triggered. child models should always override this method.
+        # should never be triggered. child models should always override this method.
         return f"{self._meta.model_name}: {getattr(self, 'name', super().__str__())}"
