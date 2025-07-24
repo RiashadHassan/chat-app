@@ -1,3 +1,8 @@
+ifeq ($(shell id -u),0)
+$(error Do not run make with sudo)
+endif
+
+
 # variables
 COMPOSE = docker compose
 APP_NAME = django_web  # name of the service in the docker-compose.yml

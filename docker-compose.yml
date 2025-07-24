@@ -6,7 +6,6 @@ services:
       dockerfile: docker/projectile/Dockerfile
     volumes:
       - .:/app
-      - static_volume:/app/projectile/staticfiles
     working_dir: /app/projectile
 
     env_file:
@@ -16,25 +15,25 @@ services:
       - db
       - redis
       - elasticsearch
-      - chat_service
+      # - chat_service
 
-  chat_service:
-    container_name: projectile_chat_service
-    build:
-      context: .
-      dockerfile: docker/chat_service/Dockerfile
-    volumes:
-      - ./chat_service:/app
-    working_dir: /app
-    command: uvicorn main:app --host 0.0.0.0 --port 9000 --reload
-    ports:
-      - "9000:9000"
-    env_file:
-      - ./chat_service/.env
-    environment:
-      - PYTHONPATH=/app
-    depends_on:
-      - db
+  # chat_service:
+  #   container_name: projectile_chat_service
+  #   build:
+  #     context: .
+  #     dockerfile: docker/chat_service/Dockerfile
+  #   volumes:
+  #     - ./chat_service:/app
+  #   working_dir: /app
+  #   command: uvicorn main:app --host 0.0.0.0 --port 9000 --reload
+  #   ports:
+  #     - "9000:9000"
+  #   env_file:
+  #     - ./chat_service/.env
+  #   environment:
+  #     - PYTHONPATH=/app
+  #   depends_on:
+  #     - db
       # - scylla
 
   # scylla:
@@ -100,14 +99,14 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - static_volume:/staticfiles
+      - ./projectile/staticfiles:/staticfiles:ro
+
     depends_on:
       - django_web
-      - chat_service
+      # - chat_service
     restart: unless-stopped
 
 volumes:
   postgres_data:
   elasticsearch_data:
-  static_volume: {}
   # scylla_data:
