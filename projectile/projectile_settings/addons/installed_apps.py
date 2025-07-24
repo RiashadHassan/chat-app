@@ -1,3 +1,5 @@
+import os
+
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -27,3 +29,6 @@ THIRD_PARTY_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+
+if os.environ.get("DAPHNE", "FALSE").lower() in ("true", "1", "yes"):
+    INSTALLED_APPS = ["daphne"] + INSTALLED_APPS

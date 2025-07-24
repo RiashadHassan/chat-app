@@ -71,4 +71,4 @@ urllib3==2.3.0
 zope.interface==7.2
 
 uvicorn[standard]
-# daphne==4.1.2
+daphne==4.1.2

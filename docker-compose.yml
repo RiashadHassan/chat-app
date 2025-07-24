@@ -78,6 +78,9 @@ services:
   elasticsearch:
     container_name: projectile_elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    command: > # to run ES in the foreground and log to stdout
+      bash -c "elasticsearch > /usr/share/elasticsearch/logs/elastic.log 2>&1"
+
     environment:
       - discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE}
       - xpack.security.enabled=${ELASTICSEARCH_SECURITY_ENABLED}
