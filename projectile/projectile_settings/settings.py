@@ -58,4 +58,5 @@ AUTH_USER_MODEL = "core.User"
 
 PHONENUMBER_DEFAULT_REGION = "BD"
 
+STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

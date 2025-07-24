@@ -5,6 +5,9 @@ set -e
 # now safe to call manage.py
 exec "$@"
 
+echo "Collecting Staticfiles..."
+python manage.py collectstatic --noinput
+
 echo "Running Makemigrations..."
 python manage.py makemigrations --noinput
 
@@ -15,6 +18,5 @@ echo "Starting Uvicorn..."
 exec uvicorn projectile_settings.asgi:application --host 0.0.0.0 --port 8000 --workers 4
 
 
-# command: python manage.py runserver 0.0.0.0:8000
-# command: daphne -b 0.0.0.0 -p 8000 projectile_settings.asgi:application
-# command: uvicorn projectile_settings.asgi:application --host 0.0.0.0 --port 8000 --workers 4
+# exec python manage.py runserver 0.0.0.0:8000
+# exec daphne -b 0.0.0.0 -p 8000 projectile_settings.asgi:application

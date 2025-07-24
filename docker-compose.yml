@@ -6,8 +6,9 @@ services:
       dockerfile: docker/projectile/Dockerfile
     volumes:
       - .:/app
+      - static_volume:/app/projectile/staticfiles
     working_dir: /app/projectile
-  
+
     env_file:
       - .env
     user: "${UID}:${GID}"
@@ -99,13 +100,14 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/staticfiles
     depends_on:
       - django_web
       - chat_service
     restart: unless-stopped
 
-
 volumes:
   postgres_data:
   elasticsearch_data:
+  static_volume: {}
   # scylla_data:
