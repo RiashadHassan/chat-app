@@ -7,21 +7,37 @@
 </head>
 
 <body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+    <form action="">
+        <label for="chat-types">Choose a chatting environment</label>
+        <select id="chat-types" name="chat-types">
+            <option value="channels">Channels</option>
+            <option value="threads">Threads</option>
+            <option value="gcs">Group Chats</option>
+            <option value="dms">Direct Messages</option>
+        </select>
+    </form>
+    <h4>What chat room would you like to enter?</h4>
+    <br>
+
+    <input id="uid-input" type="text" size="100"><br>
+    <input id="uid-submit" type="button" value="Enter">
 
     <script>
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function (e) {
+        //todo: set at login
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4MTkxNDQ3LCJpYXQiOjE3NTM4NzE0NDcsImp0aSI6IjE1OWIyOGRmZjQ2NDQ4NjY4MGVlNWQ5OTVlMTIwYTIyIiwidXNlcl9pZCI6MX0.cUhqgKNlCvMAaOK0iM9ylISrotTjPNY3jkA5TTO1TLQ"
+        localStorage.setItem("access_token", token)
+
+        document.querySelector('#uid-input').focus();
+        document.querySelector('#uid-input').onkeyup = function (e) {
             if (e.key === 'Enter') {  // enter, return
-                document.querySelector('#room-name-submit').click();
+                document.querySelector('#uid-submit').click();
             }
         };
 
-        document.querySelector('#room-name-submit').onclick = function (e) {
-            var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/ws/v1/chat/' + roomName + '/';
+        document.querySelector('#uid-submit').onclick = function (e) {
+            const uid = document.querySelector('#uid-input').value;
+            const chat_type = document.querySelector("#chat-types").value;
+            window.location.pathname = `/ws/v1/chat/${chat_type}/${uid}`;
         };
     </script>
 </body>

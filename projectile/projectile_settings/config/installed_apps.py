@@ -15,6 +15,7 @@ PROJECT_APPS = [
     "chat",
     "server",
     "member",
+    "message",
     "permission",
 ]
 

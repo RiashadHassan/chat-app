@@ -86,7 +86,8 @@
 
     <script>
         const url_prefix = "/ws/v1/chat/"
-
+        const token  = localStorage.getItem("access_token");
+        console.log("Using token:", token);
         const host = window.location.host
         
         const roomName = JSON.parse(document.getElementById("room-name").textContent);
@@ -94,7 +95,7 @@
         const message_submit = document.querySelector("#chat-message-submit");
 
         const chatSocket = new WebSocket(
-            "ws://" + host + url_prefix + roomName + "/"
+            `ws://${host}${url_prefix}${roomName}/?token=${token}`
         );
 
         chatSocket.onmessage = function (e) {

@@ -5,12 +5,12 @@ from base.models import BaseModelWithUID
 class Message(BaseModelWithUID):
     """
     This model is purely for prototyping.
-    actual messaging will be done via the FastAPI 'chat_service' application, with ScyllaDB as the primary message DB 
+    actual messaging will be done via the FastAPI 'chat_service' application, with ScyllaDB as the primary message DB
     """
-    
+
     # foreignkey fields
     author = models.ForeignKey(
-        "core.User", on_delete=models.SET_NULL, related_name="messages"
+        "core.User", on_delete=models.SET_NULL, null=True, related_name="messages"
     )
     author_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
@@ -24,16 +24,20 @@ class Message(BaseModelWithUID):
     )
     thread_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
-    # model fields 
+    # model fields
     content = models.TextField(max_length=5000)
 
     class Meta:
         ordering = ["-created_at"]
         indexes = [
             models.Index(fields=["channel_uid", "created_at"]),
-            models.Index(fields=["thread_uid", "created_at"])
+            models.Index(fields=["thread_uid", "created_at"]),
         ]
 
     def __str__(self):
         target = self.thread or self.channel
         return f"Message{self.uid} bu {self.author} in {target}"
+
+    @property
+    def get_author(self):
+        return str(self.author.username) if self.author else "Deleted Author"
