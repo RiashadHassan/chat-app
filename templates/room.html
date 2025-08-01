@@ -82,20 +82,24 @@
         <input id="chat-message-submit" type="button" value="Send">
     </div>
 
-    {{room_name|json_script:"room-name"}}
+    {{chat_type|json_script:"chat-type"}}
+    {{chat_uid|json_script:"chat-uid"}}
 
     <script>
         const url_prefix = "/ws/v1/chat/"
         const token  = localStorage.getItem("access_token");
         console.log("Using token:", token);
+
         const host = window.location.host
         
-        const roomName = JSON.parse(document.getElementById("room-name").textContent);
+        const chat_type = JSON.parse(document.getElementById("chat-type").textContent);
+        const chat_uid = JSON.parse(document.getElementById("chat-uid").textContent);
+        
         const message_input = document.querySelector("#chat-message-input");
         const message_submit = document.querySelector("#chat-message-submit");
 
         const chatSocket = new WebSocket(
-            `ws://${host}${url_prefix}${roomName}/?token=${token}`
+            `ws://${host}${url_prefix}${chat_type}/${chat_uid}/?token=${token}`
         );
 
         chatSocket.onmessage = function (e) {
