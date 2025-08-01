@@ -10,5 +10,5 @@ MIDDLEWARE = [
 ]
 
 SILK_MIDDLEWARE = [
-    "silk.middleware.SilkyMiddleware",
+    # "silk.middleware.SilkyMiddleware",
 ]

@@ -1,31 +1,45 @@
 import json
 import logging
 
-from asgiref.sync import async_to_sync
+from asgiref.sync import sync_to_async
 
-from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from typing import Dict, Any
-from message.models import Message
+from channels.db import database_sync_to_async
+
+from common.exceptions import RoomError
+
+from .helpers import ChatConsumerHelper
+from server.models import Channel
+
+logger = logging.getLogger(__name__)
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.logger = logging.getLogger(__name__)
+        self._helper = ChatConsumerHelper()
 
     async def connect(self):
-        self._validate_room(self.scope)
+        channel = await self.get_channel()
+        print(channel)
+        try:
 
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.room_group_name = f"chat_{self.room_name}"
+            self.room_name = await self._helper._get_validated_room(self.scope)
+            self.room_group_name = f"chat_{self.room_name}"
+            print("2222222222222222222222222", self.room_group_name)
+        except RoomError as e:
+            logger.error("Closing the WS connection due to: %s", e)
+            await self.close()
+            return
 
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         user = self.scope.get("user")
         if not user or user.is_anonymous:
             await self.close()
             return
+
+
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
 
     async def disconnect(self, code):
@@ -43,10 +57,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(context))
 
     @database_sync_to_async
-    def _validate_room(self, scope: Dict[str, Any]):
-        chat_type = scope["url_route"]["kwargs"]["chat_type"]
-        uid = scope["url_route"]["kwargs"]["uid"]
-        print(chat_type, uid)
-
-        pass
-        # try:
+    def get_channel(self):
+        return Channel.objects.all().first()
