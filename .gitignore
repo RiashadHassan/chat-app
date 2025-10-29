@@ -3,6 +3,7 @@ env
 .env
 **/__pycache__/
 **/staticfiles/
+**/mediafiles/
 # frontend
 
 # Logs

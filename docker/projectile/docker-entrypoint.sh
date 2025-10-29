@@ -3,14 +3,20 @@
 #exit immediately if any command fails (non-zero exit code).
 set -e
 
-echo "Collecting Staticfiles..."
-python manage.py collectstatic --noinput
+mkdir -p /app/projectile/mediafiles
 
-echo "Running Makemigrations..."
-python manage.py makemigrations --noinput
+# dockerfile bakes in static files
+# this section is commented out to avoid redundant collection
+# if [ "$RUN_COLLECTSTATIC" = "true" ]; then
+#     echo "Collecting staticfiles..."
+#     python manage.py collectstatic --noinput
+# fi
 
-echo "Running migrations..."
-python manage.py migrate --noinput
+if [ "$RUN_MIGRATIONS" = "true" ]; then
+    echo "Running migrations..."
+    python manage.py migrate --noinput
+fi
+
 
 if [ "$PRODUCTION" = "true" ]; then
     echo "Starting Uvicorn..."
@@ -21,6 +27,7 @@ elif [ "$USE_DAPHNE" = "true" ]; then
     exec daphne -b 0.0.0.0 -p 8000 projectile_settings.asgi:application
 
 else 
+    # should never reach here in production
     echo "Starting Django Development Server..."
     exec python manage.py runserver 0.0.0.0:8000
     

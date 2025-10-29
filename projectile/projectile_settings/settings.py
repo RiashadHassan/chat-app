@@ -7,9 +7,14 @@ from dotenv import load_dotenv
 # importing external congigs for additional settings values
 from .config import *
 
-
+# BASE_DIR is chat-app/projectile where manage.py is located
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR.parent, ".env"))
+
+# .env is inside chat-app/projectile
+# this is a bit messy, but works for now
+#TODO: restructure project to have .env at chat-app level
+ENV_PATH = os.path.join(BASE_DIR, ".env")
+load_dotenv(ENV_PATH)
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -60,3 +65,6 @@ PHONENUMBER_DEFAULT_REGION = "BD"
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

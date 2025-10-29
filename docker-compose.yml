@@ -1,3 +1,11 @@
+volumes:
+  postgres_data:
+  elasticsearch_data:
+  static_volume:
+  media_volume:
+
+  # scylla_data:
+
 services:
   django_web:
     container_name: projectile_web
@@ -5,17 +13,78 @@ services:
       context: .
       dockerfile: docker/projectile/Dockerfile
     volumes:
+      # in prod code will be baked into the image, not mounted
+      # mount is only for development purposes
       - .:/app
+
+      # named volumes for static and media files
+      - static_volume:/app/projectile/staticfiles
+      - media_volume:/app/projectile/mediafiles
     working_dir: /app/projectile
 
     env_file:
       - .env
     user: "${UID}:${GID}"
     depends_on:
-      - db
-      - redis
-      - elasticsearch
-      # - chat_service
+      db: 
+      #'docker compose down -v' and then 'up' again causes race conditions and django fails to connect to db
+      # during the first 'make up' command so to avoid that we add healthchecks, to make sure services are up before starting django
+        condition: service_healthy
+      redis:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+  db:
+    container_name: projectile_db
+    image: postgres:15
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 1s
+
+  # pgbouncer:
+  #   container_name: projectile_pgbouncer
+  #   image: edoburu/pgbouncer:latest
+  #   ports:
+  #     - "6432:6432"
+  #   volumes:
+  #     - ./db/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+  #     - ./db/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+  #   depends_on:
+  #     - db
+
+  redis:
+    container_name: projectile_redis
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  elasticsearch:
+    container_name: projectile_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    command: > # to run ES in the foreground and log to stdout
+      bash -c "elasticsearch > /usr/share/elasticsearch/logs/elastic.log 2>&1"
+
+    environment:
+      - discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE}
+      - xpack.security.enabled=${ELASTICSEARCH_SECURITY_ENABLED}
+      - bootstrap.memory_lock=${ELASTICSEARCH_MEMORY_LOCK}
+      - ES_JAVA_OPTS=${ELASTICSEARCH_JAVA_OPTS}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
 
   # chat_service:
   #   container_name: projectile_chat_service
@@ -47,54 +116,6 @@ services:
   #   environment:
   #     SCYLLA_CLUSTER_NAME: "projectile_cluster"
 
-  db:
-    container_name: projectile_db
-    image: postgres:15
-    env_file:
-      - .env
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-
-
-  # pgbouncer:
-  #   container_name: projectile_pgbouncer
-  #   image: edoburu/pgbouncer:latest
-  #   ports:
-  #     - "6432:6432"
-  #   volumes:
-  #     - ./db/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
-  #     - ./db/userlist.txt:/etc/pgbouncer/userlist.txt:ro
-  #   depends_on:
-  #     - db
-
-
-
-  redis:
-    container_name: projectile_redis
-    image: redis:7
-    ports:
-      - "6379:6379"
-
-  elasticsearch:
-    container_name: projectile_elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    command: > # to run ES in the foreground and log to stdout
-      bash -c "elasticsearch > /usr/share/elasticsearch/logs/elastic.log 2>&1"
-
-    environment:
-      - discovery.type=${ELASTICSEARCH_DISCOVERY_TYPE}
-      - xpack.security.enabled=${ELASTICSEARCH_SECURITY_ENABLED}
-      - bootstrap.memory_lock=${ELASTICSEARCH_MEMORY_LOCK}
-      - ES_JAVA_OPTS=${ELASTICSEARCH_JAVA_OPTS}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-
   nginx:
     container_name: projectile_nginx
     image: nginx:latest
@@ -102,14 +123,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./projectile/staticfiles:/staticfiles:ro
+      - static_volume:/staticfiles:ro
 
     depends_on:
       - django_web
       # - chat_service
     restart: unless-stopped
 
-volumes:
-  postgres_data:
-  elasticsearch_data:
-  # scylla_data:
