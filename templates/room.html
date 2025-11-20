@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chat Room</title>
     <style>
         html,
         body {
@@ -41,11 +41,6 @@
             margin-bottom: 15px;
         }
 
-        .chat-input-row {
-            display: flex;
-            gap: 10px;
-        }
-
         #chat-message-input {
             flex-grow: 0.3;
             padding: 10px;
@@ -75,61 +70,63 @@
 
 <body>
     <div class="chat-container">
-        <h2 id="chat-room-title">Eclipse</h2>
+        <h2 id="chat-room-title">Chat Room</h2>
         <textarea id="chat-log" readonly></textarea>
         <br>
         <input id="chat-message-input" type="text">
         <input id="chat-message-submit" type="button" value="Send">
     </div>
 
-    {{chat_type|json_script:"chat-type"}}
-    {{chat_uid|json_script:"chat-uid"}}
+    <!-- Pass Django variables to JS -->
+    {{ chat_type|json_script:"chat-type" }}
+    {{ chat_uid|json_script:"chat-uid" }}
+    {{ user_access_token|json_script:"user-token" }}
 
     <script>
-        const url_prefix = "/ws/v1/chat/"
-        const token  = localStorage.getItem("access_token");
-        console.log("Using token:", token);
+        const host = window.location.host;
+        const url_prefix = "/ws/v1/chat/";
 
-        const host = window.location.host
-        
         const chat_type = JSON.parse(document.getElementById("chat-type").textContent);
         const chat_uid = JSON.parse(document.getElementById("chat-uid").textContent);
-        
+
         const message_input = document.querySelector("#chat-message-input");
         const message_submit = document.querySelector("#chat-message-submit");
-
+        const jwtToken = localStorage.getItem("access_token");
+        // Include the token in the WebSocket URL
         const chatSocket = new WebSocket(
-            `ws://${host}${url_prefix}${chat_type}/${chat_uid}/?token=${token}`
+            `ws://${host}${url_prefix}${chat_type}/${chat_uid}/?token=${jwtToken}`
         );
 
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const chatLog = document.querySelector("#chat-log");
-            chatLog.value += (data.message += "\n");
+            chatLog.value += (data.message + "\n");
             chatLog.scrollTop = chatLog.scrollHeight;
         };
 
         chatSocket.onclose = function (e) {
-            console.error("CHAT SOCKET CLOSED UNEXPECTEDLY!!")
-        }
+            console.error("Chat socket closed unexpectedly. Reloading in 3s...");
+            setTimeout(() => window.location.reload(), 3000);
+        };
+
+        chatSocket.onerror = function(e) {
+            console.error("WebSocket error observed:", e);
+        };
+        
         message_input.focus();
         message_input.onkeyup = function (e) {
-            if (e.key == "Enter") {
+            if (e.key === "Enter") {
                 message_submit.click();
             }
         };
 
-        document.querySelector("#chat-message-submit").onclick = function (e) {
-            const messageInputDom = message_input;
-            const message = messageInputDom.value.trim();
+        message_submit.onclick = function () {
+            const message = message_input.value.trim();
             if (message.length > 0) {
-                chatSocket.send(JSON.stringify({ "message": message }));
-                messageInputDom.value = '';
+                chatSocket.send(JSON.stringify({ message }));
+                message_input.value = '';
             }
         };
-
     </script>
-
 </body>
-
 </html>

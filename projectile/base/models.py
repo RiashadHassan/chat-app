@@ -29,10 +29,11 @@ class BaseModelWithUID(models.Model):
                 attr = f"{field.name}_uid"
                 if hasattr(self, attr):
                     fk_obj = getattr(self, field.name)
-                    uid_value = getattr(fk_obj, "uid", None)
-                    setattr(
-                        self, attr, str(uid_value) if uid_value is not None else None
-                    )
+                    # If the foreign key object is None, set the uid to an empty string
+                    # setting it to None may cause issues since uid is defined as CharField
+                    # and null = True is not set.
+                    uid_value = getattr(fk_obj, "uid", "")
+                    setattr(self, attr, str(uid_value))
 
     def save(self, *args, **kwargs):
         self.updated_at = timezone.now()

@@ -15,12 +15,18 @@ class Message(BaseModelWithUID):
     author_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     channel = models.ForeignKey(
-        "server.Channel", on_delete=models.CASCADE, related_name="channel_messages"
+        "server.Channel",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="channel_messages",
     )
     channel_uid = models.CharField(max_length=36, db_index=True, blank=True)
 
     thread = models.ForeignKey(
-        "server.Thread", on_delete=models.CASCADE, related_name="thread_messages"
+        "server.Thread",
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="thread_messages",
     )
     thread_uid = models.CharField(max_length=36, db_index=True, blank=True)
 

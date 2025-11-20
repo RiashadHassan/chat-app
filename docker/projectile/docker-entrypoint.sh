@@ -20,7 +20,11 @@ fi
 
 if [ "$PRODUCTION" = "true" ]; then
     echo "Starting Uvicorn..."
-    exec uvicorn projectile_settings.asgi:application --host 0.0.0.0 --port 8000 --workers 4
+    exec uvicorn projectile_settings.asgi:application \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --workers 4 \
+    --reload # only for development convenience, remove in real production
 
 elif [ "$USE_DAPHNE" = "true" ]; then
     echo "Starting Daphne..."

@@ -24,6 +24,9 @@ docker push <image_name>
 # CONTAINERS
 # ---------------------------
 
+# Stop all docker CONTAINERS
+docker stop $(docker ps -q)
+
 # Run a container from an image, map port 80 inside container to 8080 on host, detached mode
 docker run -d -p 8080:80 <image_name>
 

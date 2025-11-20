@@ -23,11 +23,8 @@
     <input id="uid-submit" type="button" value="Enter">
 
     <script>
-        //todo: set at login
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU4MTkxNDQ3LCJpYXQiOjE3NTM4NzE0NDcsImp0aSI6IjE1OWIyOGRmZjQ2NDQ4NjY4MGVlNWQ5OTVlMTIwYTIyIiwidXNlcl9pZCI6MX0.cUhqgKNlCvMAaOK0iM9ylISrotTjPNY3jkA5TTO1TLQ"
-        localStorage.setItem("access_token", token)
         const urlPrefix = "/ws/v1/chat/"
-        
+       
         document.querySelector('#uid-input').focus();
         document.querySelector('#uid-input').onkeyup = function (e) {
             if (e.key === 'Enter') {  // enter, return

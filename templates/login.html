@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 50px; }
+        .login-container { max-width: 300px; margin: auto; }
+        input { width: 100%; padding: 10px; margin: 5px 0; }
+        button { width: 100%; padding: 10px; margin-top: 10px; }
+        #message { margin-top: 10px; color: red; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="text" id="email" placeholder="email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+    async function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const message = document.getElementById('message');
+
+    if (!email || !password) {
+        message.textContent = "Please enter both email and password.";
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost/api/token/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        console.log("data:::", data);
+        if (response.ok) {
+
+            localStorage.setItem('access_token', data.access);
+            message.style.color = "green";
+            message.textContent = "Login successful!";
+        } else {
+            message.style.color = "red";
+            message.textContent = data.detail || "Login failed!";
+        }
+    } catch (error) {
+        message.style.color = "red";
+        message.textContent = "An error occurred. Try again.";
+        console.error(error);
+    }
+}
+
+    </script>
+</body>
+</html>

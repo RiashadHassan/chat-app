@@ -64,3 +64,11 @@ class ChatConsumerHelper:
             raise RoomError("chat_uid is missing.")
 
         return (chat_type, uid)
+    
+    @database_sync_to_async
+    def _get_channel(self, scope: Dict[str, Any]) -> Channel:
+        channel_uid = scope["url_route"]["kwargs"].get("chat_uid")
+        try:
+            return Channel.objects.get(uid=channel_uid)
+        except Channel.DoesNotExist:
+            return None
