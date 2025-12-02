@@ -16,7 +16,8 @@ from server.models import ServerSpectrum
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    uid = models.UUIDField(
+    # models fields
+    uid = models.CharField(
         max_length=36, default=uuid.uuid4, editable=False, unique=True
     )
     username = models.CharField(max_length=120, unique=True)
@@ -31,10 +32,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True)
 
+    # permission fields
     is_staff = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
 
+    # url_fields
+    profile_pic_url = models.TextField(default="", blank=True)
+    banner_url = models.TextField(default="", blank=True)
+
+    # in order to avoid DB queries
     metadata = models.JSONField(default=dict)
     server_data = models.JSONField(default=dict)
 
