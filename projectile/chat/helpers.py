@@ -5,6 +5,7 @@ from typing import Dict, Any, Tuple, Union
 from channels.db import database_sync_to_async
 
 from django.core.cache import cache
+from django.db.models import QuerySet
 
 from common.exceptions import RoomError
 
@@ -84,6 +85,27 @@ class ChatConsumerHelper:
 
 
 class MessageHandler:
+    @database_sync_to_async
+    def fetch_chat_log(
+        self, limit: int, db_model: Union[Channel, Thread]
+    ) -> Union[QuerySet[Channel], QuerySet[Thread]]:
+        if isinstance(db_model, Channel):
+            # using uid to filter due to indexing on these fields
+            queryset = Message.objects.filter(channel_uid=db_model.uid)[:limit]
+        elif isinstance(db_model, Thread):
+            queryset = Message.objects.filter(thread_uid=db_model.uid)[:limit]
+        else:
+            return []
+        return [
+            {
+                "uid": m.uid,
+                "author": m.author.username,
+                "content": m.content,
+                "timestamp": m.created_at.isoformat(),
+            }
+            for m in queryset[::-1]
+        ]
+
     async def save_message(
         self, room: Union[Channel, Thread], message: str, user
     ) -> Message:

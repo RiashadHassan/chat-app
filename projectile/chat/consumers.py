@@ -37,6 +37,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
+        # verify user
         user = self.scope.get("user")
         if not user or user.is_anonymous:
             LOGGER.error("Unauthenticated user. Closing connection.")
@@ -45,6 +46,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
+
+        # load the previous chat log for this room
+        await self._load_chat_log(limit=50)
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
@@ -65,3 +69,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         context = {"message": message}
         await self.send(text_data=json.dumps(context))
         await self._messenger.save_message(self.room, message, self.scope.get("user"))
+
+    async def _load_chat_log(self, limit: int):
+        chat_log = await self._messenger.fetch_chat_log(limit=limit, db_model=self.room)
+
+        await self.send(
+            text_data=json.dumps({"type": "chat_log", "messages": chat_log})
+        )
