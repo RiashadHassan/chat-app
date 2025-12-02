@@ -1,48 +1,45 @@
 import json
 import logging
 
-from asgiref.sync import sync_to_async
-
 from channels.generic.websocket import AsyncWebsocketConsumer
-
-from channels.db import database_sync_to_async
 
 from common.exceptions import RoomError
 
-from .helpers import ChatConsumerHelper
-from server.models import Channel
-from message.models import Message
+from .helpers import ChatConsumerHelper, MessageHandler
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.channel = None
+        self.room = None
         self.room_name = None
         self.room_group_name = None
 
         self._helper = ChatConsumerHelper()
+        self._messenger = MessageHandler()
 
     async def connect(self):
         try:
-            self.channel = await self._helper._get_channel(self.scope)
-            if not self.channel:
-                logger.error("Channel not found. Closing connection.")
+            # room is either a Channel or Thread instance
+            self.room = await self._helper._get_room_from_db(self.scope)
+
+            if not self.room:
+                LOGGER.error("Room not found in DB. Closing connection.")
                 await self.close()
                 return
 
-            self.room_name = self.channel.uid
+            self.room_name = self.room.uid
             self.room_group_name = f"chat_{self.room_name}"
         except RoomError as e:
-            logger.error("Closing the WS connection due to: %s", e)
+            LOGGER.error("Closing the WS connection due to: %s", e)
             await self.close()
             return
 
         user = self.scope.get("user")
         if not user or user.is_anonymous:
-            logger.error("Unauthenticated user. Closing connection.")
+            LOGGER.error("Unauthenticated user. Closing connection.")
             await self.close()
             return
 
@@ -67,12 +64,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event.get("message")
         context = {"message": message}
         await self.send(text_data=json.dumps(context))
-        await self.__save_message(message)
-
-    @database_sync_to_async
-    def __save_message(self, message):
-        Message.objects.create(
-            channel=self.channel,
-            content=message,
-            author=self.scope.get("user"),
-        )
+        await self._messenger.save_message(self.room, message, self.scope.get("user"))
