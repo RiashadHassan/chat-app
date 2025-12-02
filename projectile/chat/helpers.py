@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, Tuple, Union
+from typing import Any, Dict, Tuple, Type, Union
 
 
 from channels.db import database_sync_to_async
@@ -10,6 +10,7 @@ from django.db.models import QuerySet
 from common.exceptions import RoomError
 
 from message.models import Message
+from message.serializers import ChatLogSerializer
 from server.models import Channel, Thread
 
 
@@ -71,7 +72,7 @@ class ChatConsumerHelper:
 
         # map chat_type to the corresponding DB model class (Channel or Thread for now)
         # TODO: add DM and Group chat features in the future
-        db_model = self.VALID_CHAT_TYPES.get(chat_type)
+        db_model: Type[Union[Channel, Thread]] = self.VALID_CHAT_TYPES.get(chat_type)
         if not db_model:
             # unknown chat_type, nothing to query
             return None
@@ -96,15 +97,9 @@ class MessageHandler:
             queryset = Message.objects.filter(thread_uid=db_model.uid)[:limit]
         else:
             return []
-        return [
-            {
-                "uid": m.uid,
-                "author": m.author.username,
-                "content": m.content,
-                "timestamp": m.created_at.isoformat(),
-            }
-            for m in queryset[::-1]
-        ]
+
+        serialized = ChatLogSerializer(instance=queryset, many=True)
+        return serialized.data
 
     async def save_message(
         self, room: Union[Channel, Thread], message: str, user
