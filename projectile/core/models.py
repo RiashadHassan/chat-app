@@ -37,13 +37,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_deleted = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
 
-    # url_fields
-    profile_pic_url = models.TextField(default="", blank=True)
-    banner_url = models.TextField(default="", blank=True)
+    #image fields (s3 managed)
+    profile_pic = models.ImageField(null=True, blank=True)
+    banner =  models.ImageField(null=True, blank=True)
 
     # in order to avoid DB queries
-    metadata = models.JSONField(default=dict)
-    server_data = models.JSONField(default=dict)
+    metadata = models.JSONField(default=dict, blank=True)
+    server_data = models.JSONField(default=dict, blank=True)
 
     USERNAME_FIELD = "email"
 

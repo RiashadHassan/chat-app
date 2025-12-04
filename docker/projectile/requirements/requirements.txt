@@ -11,6 +11,7 @@ charset-normalizer==3.4.1
 constantly==23.10.4
 cryptography==44.0.2
 
+boto3
 
 dj-database-url==2.3.0
 Django==5.2.1
@@ -23,7 +24,7 @@ djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 django-cors-headers==4.7.0
 drf-spectacular==0.28.0
-
+django-storages[s3]
 
 elastic-transport==8.17.1
 elasticsearch==8.18.1
