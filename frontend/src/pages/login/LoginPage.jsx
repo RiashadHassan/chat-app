@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginBackdrop = () => {
   return <div className="login-bg-image"></div>;
@@ -7,32 +8,33 @@ const LoginBackdrop = () => {
 const LoginPortal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("LOGGING IN...");
-    const url = "http://localhost/api/token/"
+    const url = "http://localhost/api/token/";
     try {
       const response = await fetch(url, {
-        method : "POST",
-        headers :{
-          "Content-Type": "application/json"
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({email, password})
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-      console.log(response)
-      if (response.ok){ 
-      localStorage.setItem("access_token", data.access);
-      localStorage.setItem("refresh_token", data.refresh);
+      console.log(response);
+      if (response.ok) {
+        localStorage.setItem("access_token", data.access);
+        localStorage.setItem("refresh_token", data.refresh);
+        navigate("/me");
+      } else {
+        alert("Login Failed!");
+      }
+    } catch (error) {
+      alert("REDDD");
     }
-  }
-
-    catch (error) {
-      alert("REDDD")
-    }
-      
   };
 
   return (
@@ -83,7 +85,9 @@ const LoginPortal = () => {
       </form>
       <div className="register-section">
         <p>Need an account?</p>
-        <a href="#" target=" ">Register</a>
+        <a href="#" target=" ">
+          Register
+        </a>
       </div>
     </div>
   );
