@@ -18,8 +18,7 @@ const ServersPage = () => {
       }
 
       const data = await response.json();
-      console.log("DATA", data)
-      setServers(data.results); // <-- store in state
+      setServers(data.results);
     } catch (error) {
       console.error("Error fetching servers:", error);
     }
@@ -29,17 +28,16 @@ const ServersPage = () => {
     getServers();
   }, []);
 
-const getServerInitials = (fullName) =>{
-    const separatedList = fullName.split("-");    
-    
-    console.log(separatedList)
-    const initialsList = separatedList.map((e)=>e[0])
-    return initialsList.join("").toUpperCase()
-};
+  const getServerInitials = (fullName) => {
+    const separatedList = fullName.split("-");
+    console.log(separatedList);
+    const initialsList = separatedList.map((e) => e[0]);
+    return initialsList.join("").toUpperCase();
+  };
 
   return (
     <div className="servers-layout">
-      {/* LEFT SIDEBAR: SERVER ICONS */}
+      {/* left sidebar: server icons */}
       <aside className="server-sidebar">
         <div className="server-icon home">H</div>
 
@@ -52,7 +50,7 @@ const getServerInitials = (fullName) =>{
         <div className="server-icon add">+</div>
       </aside>
 
-      {/* MIDDLE SIDEBAR: CHANNEL LIST */}
+      {/* middle sidebar: channels list */}
       <aside className="channel-sidebar">
         <h2>Channels</h2>
         <ul>
@@ -62,7 +60,7 @@ const getServerInitials = (fullName) =>{
         </ul>
       </aside>
 
-      {/* MAIN CONTENT */}
+      {/* main content stuff */}
       <main className="main-content">
         <h1>Welcome!</h1>
         <p>Select a server or channel from the sidebar.</p>

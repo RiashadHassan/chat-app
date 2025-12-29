@@ -17,6 +17,7 @@ project_urls = [
     path("api/aquila/", include("aquila.rest.urls")),
     # for users (DB CRUD)
     path("api/v1/core/", include("core.rest.urls")),
+    path("api/v1/connections/", include("connection.rest.urls")),
     path("api/v1/servers/", include("server.rest.urls")),
     path(
         "api/v1/servers/<uuid:server_uid>/members/",

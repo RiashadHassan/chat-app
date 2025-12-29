@@ -12,6 +12,7 @@ PROJECT_APPS = [
     "aquila",
     "base",
     "core",
+    "connection",
     "chat",
     "server",
     "member",
