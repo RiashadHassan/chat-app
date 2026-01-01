@@ -45,7 +45,24 @@ class ConnectionRequestCreateSerializer(serializers.ModelSerializer):
                 receiver=receiver,
                 status=ConnectionRequestStatus.PENDING,
             ).exists():
-                raise serializers.ValidationError("Cannot send request to this user.")
+                raise serializers.ValidationError("Request already sent to this user.")
+
+            if ConnectionRequest.objects.filter(
+                sender=receiver,
+                receiver=sender,
+                status=ConnectionRequestStatus.PENDING,
+            ).exists():
+                raise serializers.ValidationError(
+                    "This user has already sent you a connection request."
+                )
+
+            if (
+                receiver.connections_left.filter(left_user=sender).exists()
+                or receiver.connections_right.filter(right_user=sender).exists()
+            ):
+                raise serializers.ValidationError(
+                    "You are already connected with this user."
+                )
 
             attrs["sender"] = sender
             attrs["receiver"] = receiver
