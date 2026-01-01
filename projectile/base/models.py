@@ -36,7 +36,8 @@ class BaseModelWithUID(models.Model):
                     setattr(self, attr, str(uid_value))
 
     def save(self, *args, **kwargs):
-        self.updated_at = timezone.now()
+        if self.pk:
+            self.updated_at = timezone.now()
         self.update_uids()
         return super().save()
 

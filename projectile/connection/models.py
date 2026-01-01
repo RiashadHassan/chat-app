@@ -39,10 +39,12 @@ class ConnectionRequest(BaseModelWithUID):
 
 class UserConnection(BaseModelWithUID):
     # foreignkey fields
+    # sender of the request is always the left_user
     left_user = models.ForeignKey(
         "core.User", on_delete=models.CASCADE, related_name="connections_left"
     )
     left_user_uid = models.CharField(max_length=36, db_index=True, blank=True)
+    # receiver of the request is always the right_user
     right_user = models.ForeignKey(
         "core.User", on_delete=models.CASCADE, related_name="connections_right"
     )

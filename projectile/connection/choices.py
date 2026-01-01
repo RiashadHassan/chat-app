@@ -5,4 +5,4 @@ class ConnectionRequestStatus(models.TextChoices):
     PENDING = "pending", "PENDING"
     ACCEPTED = "accepted", "ACCEPTED"
     REJECTED = "rejected", "REJECTED"
-    CANCELED = "cancelled", "CANCELLED"
+    CANCELLED = "cancelled", "CANCELLED"
