@@ -1,6 +1,9 @@
 from django.apps import AppConfig
 
 
-class FriendConfig(AppConfig):
+class ConnectionConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "connection"
+
+    def ready(self):
+        import connection.signals
