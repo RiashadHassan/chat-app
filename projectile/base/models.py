@@ -41,6 +41,10 @@ class BaseModelWithUID(models.Model):
         self.update_uids()
         return super().save()
 
+    def __str__(self):
+        # should never be triggered. child models should always override this method.
+        return f"{self._meta.model_name}: {getattr(self, 'uid', super().__str__())}"
+
 
 class BaseModelWithSlug(BaseModelWithUID):
     name = models.CharField(max_length=128, db_index=True)
