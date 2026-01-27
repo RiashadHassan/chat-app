@@ -15,6 +15,8 @@ from drf_spectacular.views import (
 project_urls = [
     # for system administration only
     path("api/aquila/", include("aquila.rest.urls")),
+    # for health, probe and readiness chekcs
+    path("health/", include("health.urls")),
     # for users (DB CRUD)
     path("api/v1/core/", include("core.rest.urls")),
     path("api/v1/connections/", include("connection.rest.urls")),

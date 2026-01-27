@@ -18,6 +18,7 @@ PROJECT_APPS = [
     "member",
     "message",
     "permission",
+    "health",
 ]
 
 THIRD_PARTY_APPS = [
