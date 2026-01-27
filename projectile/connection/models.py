@@ -16,6 +16,14 @@ class ConnectionRequest(BaseModelWithUID):
         "core.User", on_delete=models.CASCADE, related_name="received_requests"
     )
     receiver_uid = models.CharField(max_length=36, db_index=True, blank=True)
+    
+    created_connection = models.ForeignKey(
+        "connection.UserConnection",
+        on_delete=models.CASCADE,
+        related_name="connection_requests",
+        null=True,
+        blank=True,
+    )
 
     # model fields
     status = models.CharField(
