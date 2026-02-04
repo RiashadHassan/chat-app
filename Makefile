@@ -50,7 +50,7 @@ run:
 	$(COMPOSE) exec $(APP_NAME) python manage.py runserver 0.0.0.0:8000
 
 test:
-	$(COMPOSE) exec $(APP_NAME) python manage.py test
+	$(COMPOSE) exec $(APP_NAME) pytest
 
 runscript:
 	$(COMPOSE) exec $(APP_NAME) python manage.py runscript script

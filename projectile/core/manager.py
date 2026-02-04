@@ -5,6 +5,9 @@ class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **kwargs):
         if not email:
             raise ValueError("An Email Must Be Provided!")
+        
+        if password is None:
+            raise ValueError("A Password Must Be Provided!")
 
         email = self.normalize_email(email=email)
         user = self.model(email=email, **kwargs)
@@ -21,4 +24,4 @@ class CustomUserManager(BaseUserManager):
         if not kwargs.get("is_superuser", False):
             raise ValueError("is_superuser value must be set to True")
 
-        self.create_user(email, password, **kwargs)
+        return self.create_user(email, password, **kwargs)
