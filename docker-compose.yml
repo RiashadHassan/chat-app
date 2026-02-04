@@ -26,17 +26,15 @@ services:
       - .env
     user: "${UID}:${GID}"
     depends_on:
-      db: 
-      #'docker compose down -v' and then 'up' again causes race conditions and django fails to connect to db
-      # during the first 'make up' command so to avoid that we add healthchecks, to make sure services are up before starting django
-        condition: service_healthy
+      pgbouncer: 
+        condition: service_started
       redis:
         condition: service_started
       elasticsearch:
         condition: service_started
   db:
     container_name: projectile_db
-    image: postgres:15
+    image: postgres:16
     env_file:
       - .env
     volumes:
@@ -49,16 +47,19 @@ services:
       retries: 10
       start_period: 1s
 
-  # pgbouncer:
-  #   container_name: projectile_pgbouncer
-  #   image: edoburu/pgbouncer:latest
-  #   ports:
-  #     - "6432:6432"
-  #   volumes:
-  #     - ./db/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
-  #     - ./db/userlist.txt:/etc/pgbouncer/userlist.txt:ro
-  #   depends_on:
-  #     - db
+  pgbouncer:
+    container_name: projectile_pgbouncer
+    image: edoburu/pgbouncer:latest
+    ports:
+      - "6432:6432"
+    env_file:
+      - .env
+    volumes:
+      - ./db/pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+      - ./db/pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt
+    depends_on:
+      db:
+        condition: service_healthy
 
   redis:
     container_name: projectile_redis

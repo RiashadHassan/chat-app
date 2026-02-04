@@ -1,3 +1,0 @@
-# this is purely for development purposes
-
-"postgres" "md5b36110dac48e05a452564e3a00118784"

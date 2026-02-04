@@ -1,0 +1,1 @@
+"chat_app_user" "SCRAM-SHA-256$4096:/d3iMpdGjqs6aIzVqjRsLw==$JctLpMJ785GyBWLvOqJT3ihVh5N0u6seihcZgzpdLhQ=:i3Sm10oKxX+d4uWDNIwPF0bYWEyhnhE4S5T239vbs90="
