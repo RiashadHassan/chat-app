@@ -15,7 +15,7 @@ RUN addgroup --gid $GID appgroup && \
 WORKDIR /app
 
 # copy and install dependencies
-COPY docker/projectile/requirements/requirements.txt /app/requirements.txt
+COPY docker/projectile/requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 # copy project code
 COPY projectile/ /app/projectile/
