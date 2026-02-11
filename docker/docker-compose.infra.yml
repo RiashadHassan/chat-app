@@ -1,0 +1,23 @@
+volumes:
+  static_volume:  # shared with Django for static files
+
+networks:
+  projectile_net:
+    external: true
+
+services:
+  nginx:
+    container_name: projectile_nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/staticfiles:ro
+    depends_on:
+      # - auth_service
+      - django_web
+      # - chat_service
+    restart: unless-stopped
+    networks:
+      - projectile_net

@@ -1,0 +1,33 @@
+volumes:
+  static_volume:
+  media_volume:
+  
+networks:
+  projectile_net:
+    external: true
+
+services:
+  django_web:
+    container_name: projectile_web
+    build:
+      context: ../ # the root dir
+      dockerfile: docker/projectile/Dockerfile
+    volumes:
+      - ../.:/app
+      - static_volume:/app/projectile/staticfiles
+      - media_volume:/app/projectile/mediafiles
+    working_dir: /app/projectile
+    env_file:
+      - .env
+    user: "${UID}:${GID}"
+    depends_on:
+      pgbouncer:
+        condition: service_started
+      redis:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+    networks:
+      - projectile_net
+
+
