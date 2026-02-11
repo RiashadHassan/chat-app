@@ -1,5 +1,7 @@
 import uuid
 
+from datetime import timedelta
+
 from django.db import models
 
 from health.choices import (
@@ -10,8 +12,13 @@ from health.choices import (
     HealthCheckProtocol,
 )
 
+from projectile.ttl.mixins import TTLModelMixin
 
-class HealthCheckLog(models.Model):
+
+class HealthCheckLog(models.Model, TTLModelMixin):
+    TTL_FIELD = "created_at"
+    TTL_DURATION = timedelta(days=30)
+
     uid = models.CharField(
         max_length=36, default=uuid.uuid4, editable=False, unique=True
     )
