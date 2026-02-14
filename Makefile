@@ -4,9 +4,9 @@ endif
 
 
 # variables
-COMPOSE = docker compose
-APP_NAME = django_web  # name of the service in the docker-compose.yml
-CHAT_APP_NAME = chat_service # name of the service in the docker-compose.yml
+COMPOSE = docker compose -f docker/docker-compose.db.yml -f docker/docker-compose.django.yml -f docker/docker-compose.infra.yml
+APP_NAME = django_web  # name of the service in the docker-compose files
+CHAT_APP_NAME = chat_service # name of the service in the docker-compose files
 
 # docker commands
 up:
