@@ -1,3 +1,9 @@
+# this compose has been deprecated 
+# new setup uses separate compose files for db and app
+# see docker/docker-compose.db.yml and docker/docker-compose.django.yml
+# didn't want to delete this file due to the amount of work that went into it,
+# and also to keep it as a reference for how to set up the db services in the new compose files
+
 volumes:
   postgres_data:
   elasticsearch_data:

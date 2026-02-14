@@ -1,9 +1,15 @@
 # official slim Python runtime
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 # don’t write .pyc files and enable unbuffered logs
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # create a user with UID and GID matching host
 ARG UID=1000

@@ -43,7 +43,7 @@ services:
 
   redis:
     container_name: projectile_redis
-    image: redis:7
+    image: redis:8.4-alpine
     ports:
       - "6379:6379"
     networks:
