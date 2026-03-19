@@ -1,11 +1,11 @@
 from django.utils import timezone
 from django.core.management.base import BaseCommand
 
-from projectile.ttl import TTL_LOGGER
-from projectile.ttl.manager import TTLManager
-from projectile.ttl.discovery import TTLModelDiscovery
-from projectile.ttl.executor import TTLDeletionExecutor
-from projectile.ttl.policies import TTLCleanupPolicy
+from ttl import TTL_LOGGER
+from ttl.manager import TTLManager
+from ttl.discovery import TTLModelDiscovery
+from ttl.executor import TTLDeletionExecutor
+from ttl.policies import TTLCleanupPolicy
 
 
 class Command(BaseCommand):

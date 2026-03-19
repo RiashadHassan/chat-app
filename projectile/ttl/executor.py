@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.db.models import Model, QuerySet
-from projectile.ttl import TTL_LOGGER
+from ttl import TTL_LOGGER
 
 
 class TTLDeletionExecutor:

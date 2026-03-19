@@ -3,8 +3,8 @@ from typing import Iterable, Type
 from django.apps import apps
 from django.db.models import Model
 
-from projectile.ttl import TTL_LOGGER
-from projectile.ttl.mixins import TTLModelMixin
+from ttl import TTL_LOGGER
+from ttl.mixins import TTLModelMixin
 
 
 class TTLModelDiscovery:

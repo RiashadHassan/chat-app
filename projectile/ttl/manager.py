@@ -1,10 +1,10 @@
 from typing import Optional
 from django.db.models import QuerySet
 
-from projectile.ttl import TTL_LOGGER
-from projectile.ttl.discovery import TTLModelDiscovery
-from projectile.ttl.executor import TTLDeletionExecutor
-from projectile.ttl.policies import TTLCleanupPolicy
+from ttl import TTL_LOGGER
+from ttl.discovery import TTLModelDiscovery
+from ttl.executor import TTLDeletionExecutor
+from ttl.policies import TTLCleanupPolicy
 
 
 class TTLManager:

@@ -12,7 +12,7 @@ from health.choices import (
     HealthCheckProtocol,
 )
 
-from projectile.ttl.mixins import TTLModelMixin
+from ttl.mixins import TTLModelMixin
 
 
 class HealthCheckLog(models.Model, TTLModelMixin):

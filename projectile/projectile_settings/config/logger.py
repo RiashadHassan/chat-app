@@ -106,13 +106,13 @@ LOGGING = {
     "filters": {
         # using () to instantiate the filter classes
         "debug_filter": {
-            "()": "projectile.projectile_settings.config.logger.DebugOnlyFilter",
+            "()": "projectile_settings.config.logger.DebugOnlyFilter",
         },
         "info_filter": {
-            "()": "projectile.projectile_settings.config.logger.InfoOnlyFilter",
+            "()": "projectile_settings.config.logger.InfoOnlyFilter",
         },
         "error_filter": {
-            "()": "projectile.projectile_settings.config.logger.ErrorOnlyFilter",
+            "()": "projectile_settings.config.logger.ErrorOnlyFilter",
         },
     },
     # add handlers to the root logger for global logging and proper propagation

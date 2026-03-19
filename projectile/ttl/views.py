@@ -4,10 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 
-from projectile.ttl import TTL_LOGGER
-from projectile.ttl.discovery import TTLModelDiscovery
-from projectile.ttl.services import TTLIntrospectionService
-from projectile.ttl.serializers import TTLModelsListResponseSerializer
+from ttl import TTL_LOGGER
+from ttl.discovery import TTLModelDiscovery
+from ttl.services import TTLIntrospectionService
+from ttl.serializers import TTLModelsListResponseSerializer
 
 
 class TTLModelsListView(APIView):

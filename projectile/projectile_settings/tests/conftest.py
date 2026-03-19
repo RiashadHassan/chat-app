@@ -1,7 +1,7 @@
 from django.core.management import call_command
 from django.test import TestCase
 
-from projectile.projectile_settings.utils import SystemUtils
+from projectile_settings.utils import SystemUtils
 
 
 class SystemConfTestCase(TestCase):

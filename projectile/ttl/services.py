@@ -2,8 +2,8 @@ from typing import List, Type
 
 from django.db.models import Model
 
-from projectile.ttl.dto import TTLModelInfo
-from projectile.ttl.discovery import TTLModelDiscovery
+from ttl.dto import TTLModelInfo
+from ttl.discovery import TTLModelDiscovery
 
 
 class TTLIntrospectionService:
